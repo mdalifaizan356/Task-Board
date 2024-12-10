@@ -34,6 +34,7 @@ exports.createUser = async (req, res) => {
         const newUser = new userModel(finalData);
         await newUser.save();
         console.log("register new User", newUser);
+        
         return res.status(200).json({ Email, message: "Create Account Successfull" });
     }
     catch (err) {
@@ -53,6 +54,7 @@ exports.otpVarification = async (req, res) => {
     if (databaseEmail) {
         const match = databaseEmail.OTP == OTP;
         if(match){
+            await userModel.findOneAndUpdate({ Email },{ $unset: { OTP : "" } });
             return res.status(200).json({ Email, message: "OTP match" });
         } 
     }
@@ -80,14 +82,15 @@ exports.loginUser = async (req, res) => {
         return res.status(400).json({ message: "invalid credentials" });
     }
     const token = jwt.sign({ id: databaseEmail._id }, secretKey, { expiresIn: "1m" });
+    
     return res.status(200).json({ token, message: "user login successfully" });
 };
 
 
 // // Recover Password
 // exports.recoverPassword = async (req, res) => {
-//     const { Email, newPassword, OTP } = req.body
-//     console.log(Email, newPassword, OTP);
+//     const { Email, newPassword, } = req.body
+//     console.log(Email, newPassword,);
     
 //     const databaseEmail = await userModel.findOne({ Email })
 //     console.log(databaseEmail);
@@ -110,41 +113,59 @@ exports.loginUser = async (req, res) => {
 
 
 
+// exports.recoverPassword = async (req, res) => {
+//   const { Email, newPassword, OTP } = req.body;
+
+//   const user = await userModel.findOne({ Email });
+//   if (!user) {
+//     return res.status(400).json({ message: "Email is not registered" });
+//   }
+
+//   if (OTP && newPassword) {
+//     if (user.OTP !== OTP) {
+//       return res.status(400).json({ message: "Waiting for OTP varification" });
+//     }
+
+//     // Update password (make sure to hash it if required)
+//     const dataBasePassword = user.Password;
+//     const matchPassword = await bcrypt.compare(newPassword, dataBasePassword);
+
+//     user.Password = newPassword; // For example, hash the password before saving
+//     user.OTP = undefined; // Clear OTP after successful reset
+//     await user.save();
+
+//     return res.status(200).json({ message: "Password updated successfully" });
+//   }
+
+// //   If OTP is not provided, generate OTP and send it via email
+//   if (!user.OTP) {
+//     const randotp = await genertaeOtp();
+//         if (randotp) {
+//             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
+//         }
+
+//     // Save OTP to user's record (for comparison later)
+//     user.OTP = randotp;
+//     await user.save();
+//   }
+// };
+
+
+
 exports.recoverPassword = async (req, res) => {
-  const { Email, newPassword, OTP } = req.body;
-
-  const user = await userModel.findOne({ Email });
-  if (!user) {
-    return res.status(400).json({ message: "Email is not registered" });
-  }
-
-//   If OTP is provided, verify the OTP and update the password
-  if (OTP && newPassword) {
-    // Check if OTP matches
-    if (user.OTP !== OTP) {
-      return res.status(400).json({ message: "Invalid OTP" });
-    }
-
-    // Update password (make sure to hash it if required)
-    const dataBasePassword = user.Password;
-    const matchPassword = await bcrypt.compare(newPassword, dataBasePassword);
-
-    user.Password = newPassword; // For example, hash the password before saving
-    user.OTP = undefined; // Clear OTP after successful reset
-    await user.save();
-
-    return res.status(200).json({ message: "Password updated successfully" });
-  }
-
-//   If OTP is not provided, generate OTP and send it via email
-  if (!user.OTP) {
-    const randotp = await genertaeOtp();
+    const { Email, newPassword, OTP } = req.body;
+  
+    const user = await userModel.findOne({ Email });
+    if (user) {
+        const randotp = await genertaeOtp();
+        console.log(randotp);
+        await userModel.findOneAndUpdate({ OTP },{ $set: { OTP : randotp } });
         if (randotp) {
             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
         }
-
-    // Save OTP to user's record (for comparison later)
-    user.OTP = randotp;
-    await user.save();
-  }
-};
+        return res.status(200).json({ message: "User Found" });
+    }
+    else{
+        return res.status(400).json({ message: "Email is not registered" });
+    }
+  };

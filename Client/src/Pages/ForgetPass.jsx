@@ -26,7 +26,7 @@ const ForgetPass = () => {
       if (response.status === 200) {
         alert("Password Change Successful!");
         // Redirect to OTP Verification page
-        navigate("/signin");
+        navigate("/otpverification");
       }
     } catch (error) {
       console.error("Error during Change Pass:", error);
@@ -57,18 +57,6 @@ const ForgetPass = () => {
             placeholder="Enter your new password"
             name="Password"
             value={formData.Password}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formOTP">
-          <Form.Label>Enter OTP</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter OTP"
-            name="OTP"
-            value={formData.OTP}
             onChange={handleChange}
             required
           />
