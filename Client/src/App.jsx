@@ -10,6 +10,10 @@ import SignIn from './Pages/SignIn';
 import OTPVarification from './Pages/OTPVarification';
 import UserDashboard from './Pages/UserDashboard';
 import ForgetPass from './Pages/ForgetPass';
+import ChangePass from "./Pages/ChangePass"
+import EditProfile from './Pages/EditProfile';
+import PNF from './Pages/PNF';
+import TaskBoard from './Pages/TaskBoard';
 
 function App() { 
   return (
@@ -24,6 +28,10 @@ function App() {
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/userdashboard" element={<UserDashboard />} />
                 <Route path="/forgetpass" element={<ForgetPass />} />
+                <Route path="/taskboard" element={<TaskBoard />} />
+                {/* <Route path="/changepass" element={<ChangePass />} /> */}
+                {/* <Route path="/editprofile" element={<EditProfile />} /> */}
+                <Route path="*" element={<PNF />} />
               </Routes> 
           </Col>
         </Row>

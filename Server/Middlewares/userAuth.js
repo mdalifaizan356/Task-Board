@@ -12,16 +12,16 @@ module.exports = async (req, res, next)=>{
             return res.status(401).json({message:"No token provided"})
         }
         const splitToken = token.split(" ")[1]
-        console.log(splitToken);
+        // console.log(splitToken);
 
         const decode = jwt.verify(splitToken, secretKey);
-        console.log(decode);
+        // console.log(decode);
 
         if(!decode){
             return res.status(401).json({message:"No token provided"})
         }
         const user = await userModel.findById(decode.id);
-        console.log(user);
+        // console.log(user);
 
         if(!user){
             return res.status(401).json({message:"User Not Found"});

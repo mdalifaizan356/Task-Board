@@ -12,7 +12,7 @@ const secretKey = process.env.SECRETKEY;
 exports.createUser = async (req, res) => {
     try {
         const { Email, Password, Photo, OTP, ...restData } = req.body;
-        // Check Email already exist or not.
+        // Check Email already exist or not. 
         const existUser = await userModel.findOne({ Email });
         if (existUser) {
             return res.status(404).json({ message: "User Already Exist" });
@@ -81,91 +81,67 @@ exports.loginUser = async (req, res) => {
     if (!matchPassword) {
         return res.status(400).json({ message: "invalid credentials" });
     }
-    const token = jwt.sign({ id: databaseEmail._id }, secretKey, { expiresIn: "1m" });
+    const token = jwt.sign({ id: databaseEmail._id }, secretKey, { expiresIn: "30m" });
     
     return res.status(200).json({ token, message: "user login successfully" });
 };
 
 
-// // Recover Password
 // exports.recoverPassword = async (req, res) => {
-//     const { Email, newPassword, } = req.body
-//     console.log(Email, newPassword,);
-    
-//     const databaseEmail = await userModel.findOne({ Email })
-//     console.log(databaseEmail);
-//     if (databaseEmail) {
+//     const { Email, newPassword, OTP } = req.body;
+//     const user = await userModel.findOne({ Email });
+//     if (user) {
 //         const randotp = await genertaeOtp();
 //         console.log(randotp);
+//         await userModel.findOneAndUpdate({ Email },{ $set: { OTP : randotp } });
 //         if (randotp) {
 //             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
-//             console.log("OTP sent");
 //         }
+//         res.send.status(200).json({ message: "User Found" });
 //     }
 //     else{
-//         return res.status(400).json({ message: "please Signup" });
+//         return res.status(400).json({ message: "Email is not registered" });
 //     }
-
-
-// };
-
-
-
-
-
-// exports.recoverPassword = async (req, res) => {
-//   const { Email, newPassword, OTP } = req.body;
-
-//   const user = await userModel.findOne({ Email });
-//   if (!user) {
-//     return res.status(400).json({ message: "Email is not registered" });
-//   }
-
-//   if (OTP && newPassword) {
-//     if (user.OTP !== OTP) {
-//       return res.status(400).json({ message: "Waiting for OTP varification" });
+//     if (user.OTP) {
+//         const match = user.OTP == OTP;
+//         if(match){
+//             const salt = bcrypt.genSaltSync(10);
+//             const hash = bcrypt.hashSync(newPassword, salt);
+//             await userModel.updateOne(
+//                 { Email },
+//                 { $set: { Password: hash }, $unset: { OTP: "" } }
+//               );
+//             return res.status(200).json({ Email, message: "OTP match" });
+//         } 
 //     }
-
-//     // Update password (make sure to hash it if required)
-//     const dataBasePassword = user.Password;
-//     const matchPassword = await bcrypt.compare(newPassword, dataBasePassword);
-
-//     user.Password = newPassword; // For example, hash the password before saving
-//     user.OTP = undefined; // Clear OTP after successful reset
-//     await user.save();
-
-//     return res.status(200).json({ message: "Password updated successfully" });
-//   }
-
-// //   If OTP is not provided, generate OTP and send it via email
-//   if (!user.OTP) {
-//     const randotp = await genertaeOtp();
-//         if (randotp) {
-//             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
-//         }
-
-//     // Save OTP to user's record (for comparison later)
-//     user.OTP = randotp;
-//     await user.save();
-//   }
-// };
-
-
+//     else{
+//         return res.status(404).json({ message: "OTP not match" });
+//     }
+//   };
 
 exports.recoverPassword = async (req, res) => {
-    const { Email, newPassword, OTP } = req.body;
-  
-    const user = await userModel.findOne({ Email });
-    if (user) {
-        const randotp = await genertaeOtp();
-        console.log(randotp);
-        await userModel.findOneAndUpdate({ OTP },{ $set: { OTP : randotp } });
-        if (randotp) {
-            sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
+        const { Email, newPassword, OTP } = req.body;
+    
+        const user = await userModel.findOne({ Email });
+        if (!user) {
+            return res.status(400).json({ message: "Email is not registered" });
         }
-        return res.status(200).json({ message: "User Found" });
-    }
-    else{
-        return res.status(400).json({ message: "Email is not registered" });
-    }
-  };
+        if(!OTP){
+            const randOtp = await genertaeOtp();
+            await userModel.updateOne({ Email }, { $set: { OTP: randOtp } });
+            sendMail(`${Email}`, "Your OTP", `${randOtp}`);
+            console.log(randOtp);
+            const newData = await userModel.findOne({ Email });
+            console.log(OTP);
+            if (newData.OTP) {
+                const match = newData.OTP == OTP;
+                if(match){
+                    const salt = bcrypt.genSaltSync(10);
+                    const hash = bcrypt.hashSync(newPassword, salt);
+                    await userModel.updateOne({ Email },{ $set: { Password: hash }, $unset: { OTP: "" } });
+                    console.log("Pass change");
+                        } 
+                    }
+            res.status(200).json({ message: "OTP sent" });
+        }
+    };

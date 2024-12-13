@@ -61,9 +61,9 @@ const UserDashboard = () => {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3" onClick={handleClose}>
-                <Nav.Link as={Link} to="#">Manage Task</Nav.Link>
-                <Nav.Link as={Link} to="#">Edit Profile</Nav.Link>
-                <Nav.Link as={Link} to="#">Change Password</Nav.Link>
+                <Nav.Link as={Link} to="/taskboard">Manage Task</Nav.Link>
+                <Nav.Link as={Link} to="/editprofile">Edit Profile</Nav.Link>
+                <Nav.Link as={Link} to="/changepass">Change Password</Nav.Link>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
               </Nav>
             </Offcanvas.Body>
