@@ -6,7 +6,9 @@
 
 html, body {
   height: 100%;
-  background: radial-gradient(circle, rgba(180,98,16,1) 0%, rgba(70,252,204,0.7987570028011204) 100%);
+  background: red;
+
+  /* background: radial-gradient(circle, rgba(180,98,16,1) 0%, rgba(70,252,204,0.7987570028011204) 100%); */
   
 }
 

@@ -36,13 +36,11 @@ const CreateTask = () => {
     setShowModal(false);
   };
 
-  // Delete List Handler
   const handleDeleteList = (listId) => {
     const updatedLists = lists.filter((list) => list.id !== listId);
     setLists(updatedLists);
   };
 
-  // Add Task Handler
   const handleAddTask = (listId) => {
     const updatedLists = lists.map((list) => {
       if (list.id === listId) {
@@ -54,7 +52,7 @@ const CreateTask = () => {
         return {
           ...list,
           tasks: [...list.tasks, { id: `task-${Date.now()}`, content: list.taskInput }],
-          taskInput: "", // Reset input field after task is added
+          taskInput: "", 
         };
       }
       return list;
@@ -74,7 +72,6 @@ const CreateTask = () => {
     setLists(updatedLists);
   };
 
-  // Handle Input Change for Tasks
   const handleTaskInputChange = (listId, value) => {
     const updatedLists = lists.map((list) => {
       if (list.id === listId) {
@@ -85,7 +82,6 @@ const CreateTask = () => {
     setLists(updatedLists);
   };
 
-  // Drag-and-Drop Handler
   const onDragEnd = (result) => {
     const { source, destination } = result;
   
@@ -108,7 +104,7 @@ const CreateTask = () => {
       );
       setLists(updatedLists);
     } 
-    // Moving task between different lists
+    // Move task between different lists
     else {
       const sourceList = lists.find((list) => list.id === source.droppableId);
       const destinationList = lists.find((list) => list.id === destination.droppableId);
@@ -145,8 +141,7 @@ const CreateTask = () => {
       }
   
       // Save List
-      await axios.post(
-        "http://localhost:6080/newlist/createList",
+      await axios.post("http://localhost:6080/newlist/createList",
         {
           _id: listToSave.id,
           title: listToSave.title,
@@ -189,8 +184,7 @@ const handleUpdateList = async (listId) => {
     }
 
     // Update the List
-    await axios.put(
-      `http://localhost:6080/newlist/updateList/${listId}`,
+    await axios.put(`http://localhost:6080/newlist/updateList/${listId}`,
       {
         title: listToSave.title,
         tasks: listToSave.tasks,
@@ -210,7 +204,7 @@ const handleUpdateList = async (listId) => {
   return (
     <>
     <UserDashboard/>
-      <Container fluid>
+      <Container fluid className="p-3 border border-primary">
         <Row className="my-3">
           <Col>
             <Button onClick={() => setShowModal(true)}>Create List</Button>
@@ -221,8 +215,9 @@ const handleUpdateList = async (listId) => {
           <Row>
             {lists.map((list) => (
               <Col key={list.id} md={4}>
-                <Container className="p-3 border border-primary">
+                <Container className="border border-primary">
                   <h5>{list.title}</h5>
+                  <div className=" border border-dark w-100">
                   <Form.Control
                     type="text"
                     placeholder="Add a task"
@@ -243,22 +238,7 @@ const handleUpdateList = async (listId) => {
                   >
                     Delete List
                   </Button>
-                  <Button
-                    variant="success"
-                    className="mt-2 ms-2"
-                    onClick={() => handleSaveList(list.id)} // Pass the current list's ID
-                    disabled={list.tasks.length === 0}
-                  >
-                  Save List
-                  </Button>
-                  <Button
-                    variant="success"
-                    className="mt-2 ms-2"
-                    onClick={() => handleUpdateList(list.id)} // Pass the current list's ID
-                    disabled={list.tasks.length === 0}
-                  >
-                  Update List
-                  </Button>
+                  </div>
                   <Droppable droppableId={list.id}>
                     {(provided) => (
                       <div
@@ -301,7 +281,6 @@ const handleUpdateList = async (listId) => {
         </DragDropContext>
       </Container>
 
-      {/* Modal for Creating a New List */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Create New List</Modal.Title>

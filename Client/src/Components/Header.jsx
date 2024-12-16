@@ -1,16 +1,22 @@
 import React from "react";
-import { Navbar, Container, Button } from "react-bootstrap";
+import { Navbar, Container, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="p-3">
+    <Container fluid>
+      <Row>
+        <Col>
+        <Navbar bg="dark" variant="dark" expand="lg" className="p-2">
       <Container fluid>
         <Navbar.Brand as={Link} to="/">TaskBoard</Navbar.Brand>
 
         <Button as={Link} to="/signup" variant="primary">Signup </Button>
       </Container>
     </Navbar>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

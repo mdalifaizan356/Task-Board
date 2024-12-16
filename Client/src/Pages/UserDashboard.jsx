@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Nav, Container, Offcanvas } from "react-bootstrap";
+import { Navbar, Nav, Container, Row, Col, Offcanvas } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import GetAllTask from "../Components/GetAllTask";
 
 
 const UserDashboard = () => {
@@ -44,7 +45,7 @@ const UserDashboard = () => {
   return (
     <>
       <Navbar bg="dark" variant="dark" expand={false} sticky="top">
-        <Container>
+        <Container fluid>
           <Navbar.Brand as={Link} to="/">
             Task<span style={{ color: "red" }}>Board</span>
           </Navbar.Brand>
@@ -70,6 +71,13 @@ const UserDashboard = () => {
           </Navbar.Offcanvas>
         </Container>
       </Navbar>
+      <Container>
+        <Row>
+          <Col>
+          <GetAllTask/>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };
