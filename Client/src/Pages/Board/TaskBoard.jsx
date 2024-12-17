@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Modal } from "react-bootstrap";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserDashboard from "./UserDashboard";
+import UserDashboard from "../User/UserDashboard";
 import axios from "axios";
 
 

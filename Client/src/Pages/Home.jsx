@@ -1,10 +1,11 @@
 import React from 'react';
-import Header from '../Components/Header';
+import HomeHeader from '../Components/HomeHeader';
+import UserDashboard from './User/UserDashboard';
 
 const Home = () => {
   return (
-    <Header style={{ position: 'fixed', top: 0, left: 0, width: '50%', zIndex: 1000 }} />
+    <HomeHeader style={{ position: 'fixed', top: 0, left: 0, width: '50%', zIndex: 1000 }} />
   )
 }
 
-export default Home
+export default Home;

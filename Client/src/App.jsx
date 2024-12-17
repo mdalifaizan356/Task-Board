@@ -3,17 +3,18 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
-import Header from '../src/Components/Header';
-import Home from './Pages/Home';
-import SignUp from './Pages/SignUp';
-import SignIn from './Pages/SignIn';
-import OTPVarification from './Pages/OTPVarification';
-import UserDashboard from './Pages/UserDashboard';
-import ForgetPass from './Pages/ForgetPass';
-import ChangePass from "./Pages/ChangePass"
-import EditProfile from './Pages/EditProfile';
+// import Header from '../src/Components/Header';
+import Home from "./Pages/Home"
+import SignUp from './Pages/User/SignUp';
+import SignIn from './Pages/User/SignIn';
+import OTPVarification from './Pages/User/OTPVarification';
+import UserDashboard from './Pages/User/UserDashboard';
+import ForgetPass from './Pages/User/ForgetPass';
+import ChangePass from "./Pages/User/ChangePass"
+import EditProfile from './Pages/User/EditProfile';
 import PNF from './Pages/PNF';
-import TaskBoard from './Pages/TaskBoard';
+import TaskBoard from './Pages/Board/TaskBoard';
+
 
 function App() { 
   return (

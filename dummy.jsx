@@ -335,3 +335,223 @@ const handleUpdateList = async (listId) => {
 };
 
 export default CreateTask;
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import GetAllTask from "../Components/GetAllTask";
+
+
+const UserDashboard = () => {
+  const [show, setShow] = useState(false); 
+  const navigate = useNavigate();
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleLogout = () => {
+    localStorage.removeItem("Token");
+    navigate("/signin");
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("Token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Decode token
+        const currentTime = Date.now(); // Current time in milliseconds
+
+        if (decoded.exp * 1000 < currentTime) { // Check expiry
+          // Token is expired
+          localStorage.removeItem("Token");
+          navigate("/signin");
+        }
+      } catch (error) {
+        console.error("Invalid Token", error);
+        localStorage.removeItem("token");
+        navigate("/signin");
+      }
+    } else {
+      // No token found
+      navigate("/signin");
+    }
+  }, [navigate]);
+
+  return (
+    <>
+<Navbar bg="dark" variant="dark" expand={false} sticky="top">
+      <Container fluid>
+        <Navbar.Brand as={Link} to="/">
+          Task<span style={{ color: "red" }}>Board</span>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={handleShow} />
+        <Navbar.Offcanvas
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+          placement="end"
+          show={show}
+          onHide={handleClose}
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title id="offcanvasNavbarLabel">Menu</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <Nav className="justify-content-end flex-grow-1 pe-3" >
+              <Nav.Link as={Link} to="/taskboard">Manage Task</Nav.Link>
+              <Nav.Link as={Link} to="/editprofile">Edit Profile</Nav.Link>
+              <Nav.Link as={Link} to="/changepass">Change Password</Nav.Link>
+              {/* Dropdown menu */}
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">
+                  Settings
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/settings">General Settings</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/account">Account Settings</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              {/* Dropdown menu */}
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">
+                  Manage Profile
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/settings">General Settings</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/account">Account Settings</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              {/* Dropdown menu */}
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">
+                  Settings
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/settings">General Settings</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/account">Account Settings</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Nav>
+          </Offcanvas.Body>
+        </Navbar.Offcanvas>
+      </Container>
+    </Navbar>
+    </>
+  );
+};
+
+export default UserDashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Create List
+// exports.createList = async (req, res) => {
+//     console.log(req.body);
+//     listData=req.body
+//     try {
+//           const list = new listModel(listData); 
+//           console.log(listData);
+//           await list.save();
+//         }catch (error) {
+//         console.error("Error saving lists:", error);
+//       }
+// };
+
+// Save Lists
+exports.createList = async (req, res) => {
+  // console.log(req.body);
+  try {
+    const newList = new listModel(req.body);
+    await newList.save();
+    res.status(201).send("List created!");
+  }
+  catch (err) {
+    res.status(400).send(err.message); 
+  }
+};
+
+// Save Tasks
+exports.createTask = async (req, res) => {
+  // console.log(req.body);
+  try {
+    const newTask = new taskModel(req.body);
+    await newTask.save();
+    res.status(201).send("Task created!");
+  }
+  catch (err) {
+    res.status(400).send(err.message);
+  }
+};
+
+// Update Tasks
+exports.createTask = async (req, res) => {
+  try {
+    const newTask = new taskModel(req.body);
+    await newTask.save();
+    res.status(201).send("Task created!");
+  }
+  catch (err) {
+    res.status(400).send(err.message);
+  }
+};
+
+
+// Update tasks
+exports.updateList = async (req, res) => {
+  const { listId } = req.params;
+  const { title, tasks } = req.body;
+
+  try {
+    const list = await taskModel.findById(listId);
+    if (!list)
+      {
+        return res.status(404).json({ message: "List not found" });
+      }
+
+    list.title = title || list.title;
+    list.tasks = tasks || list.tasks;
+    await list.save();
+
+    res.status(200).json({ message: "List updated successfully!" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+// showList
+exports.showList = async (req, res) => {
+  const allList = await listModel.find();
+  console.log(allList);
+
+};
