@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const userRoute = require("./Routes/userRoute");
-const listRoute = require("./Routes/boardRoute");
+const boardRoute = require("./Routes/boardRoute");
 const fileUpload = require('express-fileupload');
 const cors = require("cors");
 
@@ -16,7 +16,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cors());
 app.use(fileUpload());
 app.use("/newuser", userRoute);
-app.use("/newboard", listRoute);
+app.use("/newboard", boardRoute);
 
 
 

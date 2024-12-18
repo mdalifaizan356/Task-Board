@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../ContextProvider/UserContextProvider";
 import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 const UserHeader = () => {
   const [show, setShow] = useState(false); 
   const navigate = useNavigate();
+  const { user } = useContext(UserContext); // Accessing user data from context
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -64,7 +67,7 @@ const UserHeader = () => {
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Account</Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item as={Link} to="/editprofile">Edit Profile</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/">Change Password</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/changepass">Change Password</Dropdown.Item>
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>
@@ -72,8 +75,8 @@ const UserHeader = () => {
               <Dropdown as={Nav.Item}>
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/settings">Show All Board</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/addnewboard">Add New Board</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/showallboards">Show All Board</Dropdown.Item>
+                    {/* <Dropdown.Item as={Link} to="/addnewboard">Add New Board</Dropdown.Item> */}
                   </Dropdown.Menu>
               </Dropdown>
 
@@ -89,6 +92,7 @@ const UserHeader = () => {
           </Offcanvas.Body>
         </Navbar.Offcanvas>
         {/* <Navbar.Brand as={Link} to="/">Task<span style={{ color: "red" }}>Board</span></Navbar.Brand> */}
+        <h4 style={{color:"red"}}>Welcome {user.Name}</h4>
       </Container>
     </Navbar>
     </>

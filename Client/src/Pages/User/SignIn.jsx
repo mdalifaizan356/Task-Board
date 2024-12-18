@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../../ContextProvider/UserContextProvider';
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
 const SignIn = () => {
+  const { login } = useContext(UserContext); // Accessing login function from context
   const [formData, setFormData] = useState({
     Email: "",
     Password: "",
@@ -17,21 +19,34 @@ const SignIn = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:6080/newuser/loginUser", formData);
       if (response.status === 200) {
         alert("Login Successfully!");
+        
         const { token } = response.data;
-        localStorage.setItem("Token", token);
+        const user = response.data.databaseEmail;
+  
+        // Token और User डेटा localStorage में सेट करें
+        localStorage.setItem("Token", token); // Store token
+        localStorage.setItem("User", JSON.stringify(user)); // Convert user object to JSON string and store it
+  
+      
+        
+        // // Context में लॉगिन अपडेट करें
+        // login(LSuser);
+  
+        // Navigate to dashboard
         navigate("/userdashboard");
       }
     } catch (error) {
-      console.error("Error during  Login:", error);
+      console.error("Error during Login:", error);
       alert("Login Failed! Please try again.");
     }
   };
+  
   return (
     <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
       <h1 className="text-center mb-4">Sign In</h1>

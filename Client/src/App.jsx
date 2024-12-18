@@ -14,6 +14,7 @@ import ChangePass from "./Pages/User/ChangePass"
 import EditProfile from './Pages/User/EditProfile';
 import PNF from './Pages/PNF';
 import TaskBoard from './Pages/Board/TaskBoard';
+import ShowAllBoards from "./Pages/Board/ShowAllBoards"
 
 
 function App() { 
@@ -30,8 +31,9 @@ function App() {
                 <Route path="/userdashboard" element={<UserDashboard />} />
                 <Route path="/forgetpass" element={<ForgetPass />} />
                 <Route path="/taskboard" element={<TaskBoard />} />
-                {/* <Route path="/changepass" element={<ChangePass />} /> */}
-                {/* <Route path="/editprofile" element={<EditProfile />} /> */}
+                <Route path="/editprofile" element={<EditProfile />} />
+                <Route path="/changepass" element={<ChangePass />} />
+                <Route path="/showallboards" element={<ShowAllBoards />} />
                 <Route path="*" element={<PNF />} />
               </Routes> 
           </Col>

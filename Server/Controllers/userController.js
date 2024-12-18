@@ -83,7 +83,7 @@ exports.loginUser = async (req, res) => {
     }
     const token = jwt.sign({ id: databaseEmail._id }, secretKey, { expiresIn: "30m" });
     
-    return res.status(200).json({ token, message: "user login successfully" });
+    return res.status(200).json({ token, databaseEmail, message: "user login successfully" });
 };
 
 
