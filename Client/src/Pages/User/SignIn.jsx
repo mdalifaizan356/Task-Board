@@ -29,16 +29,10 @@ const SignIn = () => {
         const { token } = response.data;
         const user = response.data.databaseEmail;
   
-        // Token और User डेटा localStorage में सेट करें
-        localStorage.setItem("Token", token); // Store token
-        localStorage.setItem("User", JSON.stringify(user)); // Convert user object to JSON string and store it
+        localStorage.setItem("Token", token); 
+        localStorage.setItem("User", JSON.stringify(user)); 
   
       
-        
-        // // Context में लॉगिन अपडेट करें
-        // login(LSuser);
-  
-        // Navigate to dashboard
         navigate("/userdashboard");
       }
     } catch (error) {

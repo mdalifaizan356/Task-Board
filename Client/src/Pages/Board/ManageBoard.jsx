@@ -3,20 +3,28 @@ import { Container, Row, Col, Button, Form, Modal } from "react-bootstrap";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserDashboard from "../User/UserDashboard";
+import { useLocation } from 'react-router-dom';
 import axios from "axios";
 
 
-const CreateTask = () => {
+const ManageBoard = () => {
+  const location = useLocation();
+  const boardData = location.state?.boardData;
+  console.log(boardData);
+  const [board, setBoard] = useState(boardData)
+  console.log(board);
+
   const [lists, setLists] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newList, setNewList] = useState({ id: "", title: "" });
 
-  // Add List Handler
-  const handleAddList = () => {
-    if (newList.id.trim() === "" || newList.title.trim() === "") {
-      alert("Please provide both ID and Title for the list.");
-      return;
-    }
+
+
+const handleAddList = () => {
+  if (newList.id.trim() === "" || newList.title.trim() === "") {
+    alert("Please provide both ID and Title for the list.");
+    return;
+  }
 
     const isDuplicateId = lists.some((list) => list.id === newList.id);
     if (isDuplicateId) {
@@ -41,7 +49,7 @@ const CreateTask = () => {
     setLists(updatedLists);
   };
 
-  const handleAddTask = (listId) => { 
+  const handleAddTask = (listId) => {
     const updatedLists = lists.map((list) => {
       if (list.id === listId) {
         if (list.taskInput.trim() === "") {
@@ -60,7 +68,6 @@ const CreateTask = () => {
     setLists(updatedLists);
   };
 
-  // Delete Task Handler
   const handleDeleteTask = (listId, taskId) => {
     const updatedLists = lists.map((list) => {
       if (list.id === listId) {
@@ -85,13 +92,10 @@ const CreateTask = () => {
   const onDragEnd = (result) => {
     const { source, destination } = result;
   
-    // If dropped outside the list
     if (!destination) return;
   
-    // If dropped in the same position
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
   
-    // Moving task within the same list
     if (source.droppableId === destination.droppableId) {
       const listId = source.droppableId;
       const list = lists.find((list) => list.id === listId);
@@ -104,15 +108,12 @@ const CreateTask = () => {
       );
       setLists(updatedLists);
     } 
-    // Move task between different lists
     else {
       const sourceList = lists.find((list) => list.id === source.droppableId);
       const destinationList = lists.find((list) => list.id === destination.droppableId);
   
-      // Remove task from source list
       const [movedTask] = sourceList.tasks.splice(source.index, 1);
   
-      // Add task to destination list
       destinationList.tasks.splice(destination.index, 0, movedTask);
   
       const updatedLists = lists.map((list) => {
@@ -246,7 +247,7 @@ const handleUpdateList = async (listId) => {
                         {...provided.droppableProps}
                         style={{
                           backgroundColor: "#f8f9fa",
-                          marginTop: "10px",
+                          marginTop: "10px", 
                         }}
                       >
                         {list.tasks.map((task, index) => (
@@ -320,4 +321,4 @@ const handleUpdateList = async (listId) => {
   );
 };
 
-export default CreateTask;
+export default ManageBoard;

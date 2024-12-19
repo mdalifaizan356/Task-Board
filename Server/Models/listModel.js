@@ -1,21 +1,21 @@
 const mongoose = require("mongoose");
 
-const boardSchema = new mongoose.Schema({
-    boardId:{
+const listSchema = new mongoose.Schema({
+    listId:{
         type: Number,
         required: true,
     },
-    boardName:{
+    listName:{
         type:String,
         required:true
     },
-    boardColor:{
+    listColor:{
         type:String,
         required:true
     },
-    userId:{
+    boardId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "boards",
         required: true
     },
 },
@@ -25,4 +25,4 @@ const boardSchema = new mongoose.Schema({
 }
 );
 
-module.exports = mongoose.model("boards", boardSchema);
+module.exports = mongoose.model("lists", listSchema);

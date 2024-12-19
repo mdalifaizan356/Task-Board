@@ -6,7 +6,8 @@ const userAuth = require("../Middlewares/userAuth");
 router.post("/createUser", userController.createUser);
 router.post("/otpVarification", userController.otpVarification);
 router.post("/loginUser", userController.loginUser);
-router.post("/recoverPassword", userController.recoverPassword);
+// router.post("/changePassword", userController.changePassword);
+
 
 
 module.exports = router;

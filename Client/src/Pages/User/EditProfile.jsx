@@ -1,71 +1,72 @@
 import React, { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserHeader from "../../Components/UserHeader";
 
 const EditProfile = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-
-    try {
-      // Send formData to the server (POST request)
-      const response = await axios.post("http://localhost:6080/newuser/recoverPassword", formData);
-      
-      if (response.status === 200) {
-        alert("OTP sent on your Email for authentication");
-        // Redirect to OTP Verification page
-        navigate("/otpverification");
-      }
-    } catch (error) {
-      console.error("Error during Change Pass:", error);
-      alert("Recovry Failed! Please try again.");
-    }
-  };
-
   return (
-    <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
-      <h1 className="text-center mb-4">Recover Password </h1>
-      <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3 mt-5" controlId="formOldPass">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter Old Password"
-            name="OldPassword"
-            value={formData.Email}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+    <>
+      <UserHeader/>
+      <Container>
+      <Row>
+        <Col className="mt-5 d-flex justify-content-center">
+          <Form className="mt-5 w-25 border border-danger p-3">
+            <h4 className="text-center">Edit Profile</h4>
+            
+            {/* Photo Area with Hidden Input */}
+            <Form.Group className="mb-3 text-center">
+              <div
+                className="photo-upload rounded-circle mx-auto mb-3 border border-primary overflow-hidden position-relative"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  cursor: "pointer",
+                }}
+              >
+                <img
+                  src="https://via.placeholder.com/100"
+                  alt="profile"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+                {/* Hidden File Input */}
+                <input
+                  type="file"
+                  className="position-absolute w-100 h-100 opacity-0"
+                  style={{ top: 0, left: 0, cursor: "pointer" }}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      // Handle file upload preview
+                      console.log("File selected:", file.name);
+                    }
+                  }}
+                />
+              </div>
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formNewPassword">
-          <Form.Label>New Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter New Password"
-            name="NewPassword"
-            value={formData.Password}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+            {/* Username Field */}
+            <Form.Group className="mb-3" controlId="formGroupUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Enter username" />
+            </Form.Group>
 
-        <Button variant="primary" type="submit" className="w-100 mb-2">Update Password</Button>
-        <Button as={Link} to="/userdashboard" variant="danger" className="w-100">Cancel</Button>
-      </Form>
+            {/* Phone Number Field */}
+            <Form.Group className="mb-3" controlId="formGroupPhone">
+              <Form.Label>Phone Number</Form.Label>
+              <Form.Control type="text" placeholder="Enter phone number" />
+            </Form.Group>
+          </Form>
+        </Col>
+      </Row>
     </Container>
+
+    </>
+
   );
 };
 

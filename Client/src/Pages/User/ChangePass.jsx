@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../../ContextProvider/UserContextProvider";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import UserDashboard from "./UserDashboard";
+// import UserDashboard from "./UserDashboard";
+import UserHeader from "../../Components/UserHeader";
 
 const ChangePass = () => {
+  const { user } = useContext(UserContext);
+  const Email = user ? user.Email : null;
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    oldpass: "",
+    newpass: "",
+    Email:user.Email
   });
   const navigate = useNavigate();
 
@@ -19,11 +24,9 @@ const ChangePass = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-
+    // console.log(formData);
     try {
-      // Send formData to the server (POST request)
-      const response = await axios.post("http://localhost:6080/newuser/recoverPassword", formData);
-      
+      const response = await axios.post("http://localhost:6080/newuser/changePassword", formData);
       if (response.status === 200) {
         alert("OTP sent on your Email for authentication");
         // Redirect to OTP Verification page
@@ -37,37 +40,41 @@ const ChangePass = () => {
 
   return (
   <>
-    <UserDashboard/>
-    <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
-      <h1 className="text-center mb-4">Recover Password </h1>
-      <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3 mt-5" controlId="formOldPass">
-          <Form.Label>Email</Form.Label>
+<UserHeader/>
+      <Container>
+      <Row>
+        <Col className="mt-5 d-flex justify-content-center">
+          <Form className="mt-5 w-25 border border-danger p-3" onSubmit={handleSubmit}>
+            <h4 className="text-center">Change Password</h4>
+
+        <Form.Group className="mb-3" controlId="formOldPass">
+          <Form.Label>Old Password</Form.Label>
           <Form.Control
-            type="email"
-            placeholder="Enter Old Password"
-            name="OldPassword"
-            value={formData.Email}
+            type="password"
+            placeholder="Enter your email"
+            name="oldpass"
+            value={formData.oldpass}
             onChange={handleChange}
             required
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formNewPassword">
+        <Form.Group className="mb-3" controlId="formNewPass">
           <Form.Label>New Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter New Password"
-            name="NewPassword"
-            value={formData.Password}
+            placeholder="Enter your password"
+            name="newpass"
+            value={formData.newpass}
             onChange={handleChange}
             required
           />
         </Form.Group>
-
-        <Button variant="primary" type="submit" className="w-100 mb-2">Update Password</Button>
+            <Button variant="primary" type="submit" className="w-100 mb-2">Change Password</Button>
         <Button as={Link} to="/userdashboard" variant="danger" className="w-100">Cancel</Button>
-      </Form>
+          </Form>
+        </Col>
+      </Row>
     </Container>
     </>
   );

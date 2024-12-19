@@ -1,21 +1,17 @@
 const mongoose = require("mongoose");
 
-const boardSchema = new mongoose.Schema({
-    boardId:{
+const taskSchema = new mongoose.Schema({
+    taskId:{
         type: Number,
         required: true,
     },
-    boardName:{
+    taskName:{
         type:String,
         required:true
     },
-    boardColor:{
-        type:String,
-        required:true
-    },
-    userId:{
+    listId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "lists",
         required: true
     },
 },
@@ -25,4 +21,4 @@ const boardSchema = new mongoose.Schema({
 }
 );
 
-module.exports = mongoose.model("boards", boardSchema);
+module.exports = mongoose.model("tasks", taskSchema);

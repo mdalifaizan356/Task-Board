@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const boardController = require("../Controllers/boardController");
+const listController = require("../Controllers/listController");
 const userAuth = require("../Middlewares/userAuth")
 
 // router.post("/createBoard", userAuth, boardController.createBoard);
-router.post("/createBoard/:userId", boardController.createBoard);
+router.post("/createList/:boardId", listController.createList);
 // router.get("/showAllBoard/:userId", boardController.showAllBoard);
 
 

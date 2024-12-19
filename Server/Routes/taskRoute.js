@@ -5,8 +5,8 @@ const userAuth = require("../Middlewares/userAuth")
 
 // router.post("/createBoard", userAuth, boardController.createBoard);
 router.post("/createBoard/:userId", boardController.createBoard);
-// router.get("/showAllBoard/:userId", boardController.showAllBoard);
+router.get("/showAllBoard/:userId", boardController.showAllBoard);
 
 
 
-module.exports = router; 
+module.exports = router;  

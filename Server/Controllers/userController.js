@@ -119,29 +119,25 @@ exports.loginUser = async (req, res) => {
 //     }
 //   };
 
-exports.recoverPassword = async (req, res) => {
-        const { Email, newPassword, OTP } = req.body;
+
+
+// // Change Password
+// exports.changePassword = async (req, res) => {
+//     console.log(req.body);
+//     const {Email, oldpass, newpass } = req.body
+
+//     const user = await userModel.findOne({ Email });
+//     console.log(user);
+//         if (!user) {
+//             return res.status(400).json({ message: "Email is not registered" });
+//         }
+//         const dataBasePassword = user.Password;
+//         console.log(dataBasePassword);
+//         const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
+//         if(match){
+//                     return res.status(404).json({ message: "Incorrect Password" });
+//         }
     
-        const user = await userModel.findOne({ Email });
-        if (!user) {
-            return res.status(400).json({ message: "Email is not registered" });
-        }
-        if(!OTP){
-            const randOtp = await genertaeOtp();
-            await userModel.updateOne({ Email }, { $set: { OTP: randOtp } });
-            sendMail(`${Email}`, "Your OTP", `${randOtp}`);
-            console.log(randOtp);
-            const newData = await userModel.findOne({ Email });
-            console.log(OTP);
-            if (newData.OTP) {
-                const match = newData.OTP == OTP;
-                if(match){
-                    const salt = bcrypt.genSaltSync(10);
-                    const hash = bcrypt.hashSync(newPassword, salt);
-                    await userModel.updateOne({ Email },{ $set: { Password: hash }, $unset: { OTP: "" } });
-                    console.log("Pass change");
-                        } 
-                    }
-            res.status(200).json({ message: "OTP sent" });
-        }
-    };
+    
+
+// };

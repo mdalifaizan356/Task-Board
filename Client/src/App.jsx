@@ -15,6 +15,7 @@ import EditProfile from './Pages/User/EditProfile';
 import PNF from './Pages/PNF';
 import TaskBoard from './Pages/Board/TaskBoard';
 import ShowAllBoards from "./Pages/Board/ShowAllBoards"
+import ManageBoard from './Pages/Board/ManageBoard';
 
 
 function App() { 
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/editprofile" element={<EditProfile />} />
                 <Route path="/changepass" element={<ChangePass />} />
                 <Route path="/showallboards" element={<ShowAllBoards />} />
+                <Route path="/manageboard/:id" element={<ManageBoard />} />
                 <Route path="*" element={<PNF />} />
               </Routes> 
           </Col>
