@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate, BrowserRouter, Route, Routes } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import UserHeader from "../../Components/UserHeader";
+import ShowBoard from "../Board/ShowBoard";
 
 
 const UserDashboard = () => {
@@ -16,13 +17,13 @@ const UserDashboard = () => {
   return (
     <>
     <UserHeader/>
-      <Container fluid>
+      {/* <Container fluid>
         <Row>
           <Col className="p-2">
-          
+          <ShowBoard/>
           </Col>
         </Row>
-      </Container>
+      </Container> */}
     </>
   );
 };

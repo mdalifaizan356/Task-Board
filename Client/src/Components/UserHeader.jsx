@@ -75,17 +75,8 @@ const UserHeader = () => {
               <Dropdown as={Nav.Item}>
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/showallboards">Show All Board</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/showboard">Your Board</Dropdown.Item>
                     {/* <Dropdown.Item as={Link} to="/addnewboard">Add New Board</Dropdown.Item> */}
-                  </Dropdown.Menu>
-              </Dropdown>
-
-              <Dropdown as={Nav.Item}>
-                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Settings</Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/settings">General Settings</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/account">Account Settings</Dropdown.Item>
-                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>
             </Nav>

@@ -14,16 +14,14 @@ import ChangePass from "./Pages/User/ChangePass"
 import EditProfile from './Pages/User/EditProfile';
 import PNF from './Pages/PNF';
 import TaskBoard from './Pages/Board/TaskBoard';
-import ShowAllBoards from "./Pages/Board/ShowAllBoards"
+import ShowBoard from "./Pages/Board/ShowBoard"
 import ManageBoard from './Pages/Board/ManageBoard';
+import UserHeader from './Components/UserHeader';
 
 
 function App() { 
   return (
     <BrowserRouter>
-      <Container fluid>
-        <Row>
-          <Col className="p-2">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<SignUp />} />
@@ -34,13 +32,10 @@ function App() {
                 <Route path="/taskboard" element={<TaskBoard />} />
                 <Route path="/editprofile" element={<EditProfile />} />
                 <Route path="/changepass" element={<ChangePass />} />
-                <Route path="/showallboards" element={<ShowAllBoards />} />
+                <Route path="/showboard" element={<ShowBoard />} />
                 <Route path="/manageboard/:id" element={<ManageBoard />} />
                 <Route path="*" element={<PNF />} />
               </Routes> 
-          </Col>
-        </Row>
-      </Container>
     </BrowserRouter>
   );
 }
