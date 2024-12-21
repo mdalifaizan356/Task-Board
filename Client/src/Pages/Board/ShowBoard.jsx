@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../ContextProvider/UserContextProvider";
 import axios from "axios";
@@ -68,8 +69,6 @@ const ShowBoard = () => {
     }
   };
 
-
-
   useEffect(() => {
     if (userId) {
       fetchBoardData();
@@ -77,26 +76,12 @@ const ShowBoard = () => {
   }, [userId]);
 
   const viewHandler = (board) => {
-    navigate(`/manageboard/${board.boardId}`, { state: { boardData: board, userId: userId } });
+    navigate(`/manageboard/${board.boardId}`, { state: { boardData: board } });
   };
 
   const handleInputChange = (field, value) => {
     setNewBoard((prev) => ({ ...prev, [field]: value }));
   };
-  
-    // Delete a board
-    const deleteBoard = async (boardId) => {
-      try {
-        const response = await axios.delete(`http://localhost:6080/newboard/deleteBoard/${userId}/${boardId}`);
-        if (response.status === 200) {
-          alert("Board deleted successfully!");
-          await fetchBoardData();
-        }
-      } catch (error) {
-        console.error("Error deleting board:", error);
-        alert("Failed to delete board. Please try again.");
-      }
-    };
 
   return (
     <>
@@ -119,26 +104,11 @@ const ShowBoard = () => {
                 <Card
                   className="shadow-sm"
                   style={{ backgroundColor: board.boardColor || "#FFFFFF", cursor: "pointer" }}
+                  onClick={() => viewHandler(board)}
                 >
                   <Card.Body>
                     <Card.Title className="text-dark">{board.boardName}</Card.Title>
                     <Card.Text className="text-muted">Board ID: {board.boardId}</Card.Text>
-                    <div className="d-flex justify-content-between">
-                      <Button
-                        variant="info"
-                        size="sm"
-                        onClick={() => viewHandler(board)}
-                      >
-                        View
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => deleteBoard(board.boardId)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
                   </Card.Body>
                 </Card>
               </Col>
@@ -195,3 +165,4 @@ const ShowBoard = () => {
 };
 
 export default ShowBoard;
+

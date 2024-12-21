@@ -53,12 +53,12 @@ exports.showBoard =  async (req, res) => {
 };
 
 // Delete Board
-  exports.deleteBoard = async (req, res) => {
-  const { userId, boardId } = req.params;
-  try {
-    const result = await boardModel.deleteOne({ userId, boardId });
-    res.status(200).send({ message: 'Board deleted successfully!' });
-  } catch (error) {
-    res.status(500).send({ error: 'Failed to delete board.' });
-  }
-};
+//   exports.deleteBoard = async (req, res) => {
+//   const { userId, boardId } = req.params;
+//   try {
+//     const result = await oardModel.deleteOne({ userId, boardId });
+//     res.status(200).send({ message: 'Board deleted successfully!' });
+//   } catch (error) {
+//     res.status(500).send({ error: 'Failed to delete board.' });
+//   }
+// };

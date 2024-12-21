@@ -76,7 +76,7 @@ const UserHeader = () => {
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item as={Link} to="/showboard">Your Board</Dropdown.Item>
-                    {/* <Dropdown.Item as={Link} to="/addnewboard">Add New Board</Dropdown.Item> */}
+                    <Dropdown.Item as={Link} to="/taskboard">Add New Board</Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>
             </Nav>
