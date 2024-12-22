@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../ContextProvider/UserContextProvider";
 import axios from "axios";
@@ -9,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const ShowBoard = () => {
   const [showModal, setShowModal] = useState(false);
-  const [newBoard, setNewBoard] = useState({ id: "", name: "", color: "#000000" });
+  const [newBoard, setNewBoard] = useState({ name: "", color: "#000000" });
   const [boardData, setBoardData] = useState([]);
 
   const { user } = useContext(UserContext);
@@ -38,28 +37,27 @@ const ShowBoard = () => {
   // Add new board to database
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newBoard.id.trim() === "" || newBoard.name.trim() === "" || newBoard.color.trim() === "") {
-      alert("Please provide ID, Name, and Color for the board.");
+    if (newBoard.name.trim() === "" || newBoard.color.trim() === "") {
+      alert("Please provide Name and Color for the board.");
       return;
     }
 
-    const isDuplicateId = boardData.some((board) => board.boardId === Number(newBoard.id));
-    if (isDuplicateId) {
-      alert("Board ID must be unique.");
-      return;
-    }
+    const generatedId = boardData.length; // Use array length as boardId
+
+    const newBoardData = {
+      boardId: generatedId, // Set the boardId as the current index
+      boardName: newBoard.name,
+      boardColor: newBoard.color,
+    };
 
     try {
-      const newBoardData = {
-        boardId: newBoard.id,
-        boardName: newBoard.name,
-        boardColor: newBoard.color,
-      };
-
-      const response = await axios.post(`http://localhost:6080/newboard/createBoard/${userId}`, newBoardData);
+      const response = await axios.post(
+        `http://localhost:6080/newboard/createBoard/${userId}`,
+        newBoardData
+      );
       if (response.status === 200) {
         alert("Board Created Successfully!");
-        setNewBoard({ id: "", name: "", color: "#000000" }); // Reset form
+        setNewBoard({ name: "", color: "#000000" }); // Reset form
         setShowModal(false);
         await fetchBoardData(); // Re-fetch updated board data
       }
@@ -99,11 +97,14 @@ const ShowBoard = () => {
           <h2 className="text-center text-muted">No Boards Available</h2>
         ) : (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-            {boardData.map((board) => (
+            {boardData.map((board, index) => (
               <Col key={board.boardId}>
                 <Card
                   className="shadow-sm"
-                  style={{ backgroundColor: board.boardColor || "#FFFFFF", cursor: "pointer" }}
+                  style={{
+                    backgroundColor: board.boardColor || "#FFFFFF",
+                    cursor: "pointer",
+                  }}
                   onClick={() => viewHandler(board)}
                 >
                   <Card.Body>
@@ -123,15 +124,6 @@ const ShowBoard = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Board ID</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter unique ID for the board"
-                value={newBoard.id || ""}
-                onChange={(e) => handleInputChange("id", e.target.value)}
-              />
-            </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Board Name</Form.Label>
               <Form.Control
@@ -165,4 +157,3 @@ const ShowBoard = () => {
 };
 
 export default ShowBoard;
-

@@ -23,14 +23,11 @@ const ChangePass = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // console.log(formData);
     try {
-      const response = await axios.post("http://localhost:6080/newuser/changePassword", formData);
+      const response = await axios.patch("http://localhost:6080/newuser/changePassword", formData);
       if (response.status === 200) {
-        alert("OTP sent on your Email for authentication");
-        // Redirect to OTP Verification page
-        navigate("/otpverification");
+        alert("Password Change Successfully");
+        navigate("/userdashboard");
       }
     } catch (error) {
       console.error("Error during Change Pass:", error);
@@ -42,8 +39,8 @@ const ChangePass = () => {
   <>
 <UserHeader/>
       <Container>
-      <Row>
-        <Col className="mt-5 d-flex justify-content-center">
+      <Row className="mt-5 d-flex justify-content-center">
+        <Col className="mt-5 d-flex justify-content-center" >
           <Form className="mt-5 w-25 border border-danger p-3" onSubmit={handleSubmit}>
             <h4 className="text-center">Change Password</h4>
 
@@ -51,7 +48,7 @@ const ChangePass = () => {
           <Form.Label>Old Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter your email"
+            placeholder="Enter Old Password"
             name="oldpass"
             value={formData.oldpass}
             onChange={handleChange}
@@ -63,7 +60,7 @@ const ChangePass = () => {
           <Form.Label>New Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter your password"
+            placeholder="Enter New Password"
             name="newpass"
             value={formData.newpass}
             onChange={handleChange}

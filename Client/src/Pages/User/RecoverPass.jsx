@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({ Name: "", Email: "", PhNo: "", Password: "", OTP: "" });
+  const [formData, setFormData] = useState({ Email: "", Password: "", OTP: "" });
   const [otpSent, setOtpSent] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false); // For enabling/disabling the button
   const navigate = useNavigate();
@@ -12,12 +12,10 @@ const SignUp = () => {
   // Form validation function
   useEffect(() => {
     const validateForm = () => {
-      const { Name, Email, PhNo, Password, OTP } = formData;
-      // Ensure required fields are not empty and OTP is required only if sent
+      const { Email, Password, OTP } = formData;
+
       const isValid = 
-        Name.trim() !== "" &&
         Email.trim() !== "" &&
-        PhNo.trim() !== "" &&
         Password.trim() !== "" &&
         (otpSent || OTP.trim() !== "");
       setIsFormValid(isValid);
@@ -38,7 +36,8 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:6080/newuser/otpVarification", { Email: formData.Email });
+      console.log(formData.Email);
+      const response = await axios.patch("http://localhost:6080/newuser/recoverOTPVarification", { Email: formData.Email });
 
       if (response.status === 200) {
         alert("OTP Sent!");
@@ -46,7 +45,7 @@ const SignUp = () => {
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-      alert("Failed to send OTP. Please try again.");
+      alert("Email Not Ragistered");
     }
   };
 
@@ -57,33 +56,19 @@ const SignUp = () => {
       const response = await axios.put("http://localhost:6080/newuser/createUser/", formData);
 
       if (response.status === 200) {
-        alert("SignUp Successful!");
+        alert("Password Change Successful!");
         navigate("/signin");
-        const { Email } = response.data;
-        localStorage.setItem("Email", Email);
       }
     } catch (error) {
       console.error("Error during signup:", error);
-      alert("SignUp Failed! Please try again.");
+      alert("Changes Failed! Please try again.");
     }
   };
 
   return (
     <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
-      <h1 className="text-center mb-4">Sign Up</h1>
+      <h1 className="text-center mb-4">Recover Password</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="formName">
-          <Form.Label>Full Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter your name"
-            name="Name"
-            value={formData.Name}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
         <Form.Group className="mb-3" controlId="formEmail">
           <Form.Label>Email</Form.Label>
           <div className="d-flex">
@@ -114,21 +99,8 @@ const SignUp = () => {
             />
           </Form.Group>
         )}
-
-        <Form.Group className="mb-3" controlId="formPhNo">
-          <Form.Label>Phone Number</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter your Phone Number"
-            name="PhNo"
-            value={formData.PhNo}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
         <Form.Group className="mb-3" controlId="formPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>New Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Enter your password"

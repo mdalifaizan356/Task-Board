@@ -7,62 +7,54 @@ const { sendMail } = require("../Utility/SendOTP");
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRETKEY;
 
- 
-// Create User 
 exports.createUser = async (req, res) => {
     try {
         const { Email, Password, Photo, OTP, ...restData } = req.body;
-        // Check Email already exist or not. 
         const existUser = await userModel.findOne({ Email });
+        if (existUser) {
+            console.log("User Exists");
+            const match = existUser.OTP === OTP;
+            if (match) {
+                const updatedUser = await userModel.findOneAndUpdate({ Email },{$set: {...restData,
+                Password: bcrypt.hashSync(Password, bcrypt.genSaltSync(10))}, $unset: { OTP: "" }},
+                    { new: true }
+                );
+                return res.status(200).json({Email, message: "Account updated successfully with OTP match!",});
+            }
+            else {
+                return res.status(400).json({ message: "Invalid OTP!" });
+            }
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal Server Error", err });
+    }
+};
+
+
+
+// OTP Varification
+exports.otpVarification = async (req, res) => {
+    const {Email} = req.body;
+    const existUser = await userModel.findOne({ Email });
         if (existUser) {
             return res.status(404).json({ message: "User Already Exist" });
         }
-        const randotp = await genertaeOtp();
+    const randotp = await genertaeOtp();
         if (randotp) {
-            sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
+            sendMail(`${Email}`, "Task Board OTP", `${randotp}`);
         }
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(Password, salt);
-
-        const finalData = {
+        const saveOTP = {
             Email,
-            Password: hash,
             OTP: randotp,
-            ...restData,
         }
-        console.log("finalData", finalData);
-        const newUser = new userModel(finalData);
+        console.log("saveOTP", saveOTP);
+        const newUser = new userModel(saveOTP);
         await newUser.save();
         console.log("register new User", newUser);
         
         return res.status(200).json({ Email, message: "Create Account Successfull" });
     }
-    catch (err) {
-        console.log("Error", err);
-        return res.status(404).json({ message: "Internal Error", err });
-    }
-};
-
-
-// OTP Varification
-exports.otpVarification = async (req, res) => {
-    console.log(req.body);
-    // return
-    const {Email, OTP} = req.body;
-    const databaseEmail = await userModel.findOne({Email })
-    console.log(databaseEmail);
-    if (databaseEmail) {
-        const match = databaseEmail.OTP == OTP;
-        if(match){
-            await userModel.findOneAndUpdate({ Email },{ $unset: { OTP : "" } });
-            return res.status(200).json({ Email, message: "OTP match" });
-        } 
-    }
-    else{
-        return res.status(404).json({ message: "OTP not match" });
-    }
-
-}
 
 
 
@@ -85,6 +77,145 @@ exports.loginUser = async (req, res) => {
     
     return res.status(200).json({ token, databaseEmail, message: "user login successfully" });
 };
+
+// Change Psssword
+exports.changePassword = async (req, res) => {
+    console.log(req.body);
+    try {
+        const { Email, oldpass, newpass } = req.body;
+        const existUser = await userModel.findOne({ Email });
+        if (existUser) {
+            const dataBasePassword = existUser.Password;
+            const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
+            if (matchPassword) {
+                const updatedUser = await userModel.findOneAndUpdate({ Email },{$set: {Password: bcrypt.hashSync(newpass, bcrypt.genSaltSync(10))}},
+                    { new: true }
+                );
+                return res.status(200).json({Email, message: "Password Change Successfully!",});
+            }
+            else {
+                return res.status(400).json({ message: "Invalid Old Password!" });
+            }
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal Server Error", err });
+    }
+};
+
+
+// Recover Psssword
+exports.recoverPassword = async (req, res) => {
+    console.log(req.body);
+    try {
+        const { Email, OTP, newpass } = req.body;
+        const existUser = await userModel.findOne({ Email });
+        if (existUser) {
+            const dataBasePassword = existUser.Password;
+            const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
+            const match = existUser.OTP === OTP;
+            if (matchPassword || match ) {
+                const updatedUser = await userModel.findOneAndUpdate({ Email },{$set: {Password: bcrypt.hashSync(Password, bcrypt.genSaltSync(10))}, $unset: { OTP: "" }},
+                        { new: true }
+                    );
+                return res.status(200).json({Email, message: "Password Change Successfully!",});
+            }
+            else {
+                return res.status(400).json({ message: "Invalid Old Password!" });
+            }
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal Server Error", err });
+    }
+};
+
+// Recover OTP Varification
+exports.recoverOTPVarification = async (req, res) => {
+    const {Email} = req.body;
+    const existUser = await userModel.findOne({ Email });
+        if (!existUser) {
+            return res.status(404).json({ message: "User Not Exist" });
+        }
+        const randotp = await genertaeOtp();
+        if (randotp) {
+            sendMail(`${Email}`, "Task Board OTP", `${randotp}`);
+            const addOTP = await userModel.findOneAndUpdate({ Email },{$set: {OTP: randotp}},
+                { new: true }
+            );
+            return res.status(200).json({Email, message: "Account updated successfully with OTP match!",});
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // exports.recoverPassword = async (req, res) => {

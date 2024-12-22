@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     Name:{
         type:String,
-        required:true,
+        // required:true,
         trim:true,
     },
 
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
 
     PhNo:{
         type:Number,
-        required:true,
+        // required:true,
     },
  
 
@@ -28,12 +28,12 @@ const userSchema = new mongoose.Schema({
 
     Password:{
         type:String,
-        required:true,
+        // required:true,
         trim:true,
     },
 
     OTP:{
-        type:Number,
+        type:String,
         required:true,
         trim:true
     },

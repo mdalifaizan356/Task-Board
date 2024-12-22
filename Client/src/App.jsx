@@ -16,7 +16,8 @@ import PNF from './Pages/PNF';
 import TaskBoard from './Pages/Board/TaskBoard';
 import ShowBoard from "./Pages/Board/ShowBoard"
 import ManageBoard from './Pages/Board/ManageBoard';
-import UserHeader from './Components/UserHeader';
+// import UserHeader from './Components/UserHeader';
+import RecoverPass from './Pages/User/RecoverPass';
 
 
 function App() { 
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/otpverification" element={<OTPVarification />} />
                 <Route path="/signin" element={<SignIn />} />
+                <Route path="/recoverpass" element={<RecoverPass />} />
                 <Route path="/userdashboard" element={<UserDashboard />} />
                 <Route path="/forgetpass" element={<ForgetPass />} />
                 <Route path="/taskboard" element={<TaskBoard />} />

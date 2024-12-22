@@ -6,7 +6,7 @@ import axios from "axios";
 
 
 const SignIn = () => {
-  const { login } = useContext(UserContext); // Accessing login function from context
+  const { login } = useContext(UserContext); 
   const [formData, setFormData] = useState({
     Email: "",
     Password: "",
@@ -77,7 +77,7 @@ const SignIn = () => {
             <Link to="/signup" style={{ color: 'blue', textDecoration: 'underline' }}>Register</Link>
         </p>
         <p className="text-center mt-3">
-            <Link to="/forgetpass" style={{ color: 'blue', textDecoration: 'underline' }}>Forget Password?</Link>
+            <Link to="/recoverpass" style={{ color: 'blue', textDecoration: 'underline' }}>Forget Password?</Link>
         </p>
       </Form>
     </Container>
