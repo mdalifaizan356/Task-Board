@@ -4,13 +4,14 @@ const listSchema = new mongoose.Schema({
     listId:{
         type: Number,
         required: true,
+        default:1
     },
     listName:{
         type:String,
         required:true
     },
     listColor:{
-        type:String,
+        type:String, 
         required:true
     },
     boardId:{

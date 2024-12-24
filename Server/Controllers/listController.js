@@ -5,7 +5,7 @@ const boardModel = require("../Models/boardModel");
 
 
  
-// Create Board
+// Create List
 exports.createList = async (req, res) => {
   try {
     const boardId = req.params.boardId;
@@ -29,7 +29,7 @@ exports.createList = async (req, res) => {
     const savedList = await newList.save();
     res.status(201).json({
       message: "List created successfully",
-      list: savedList,
+      list: savedList, 
     });
   } catch (error) {
     console.error("Error creating board:", error);
@@ -39,8 +39,11 @@ exports.createList = async (req, res) => {
 
 
 
-// Show Board
+// Show List
 exports.showList =  async (req, res) => {
+  // console.log(req.params)
+  const { boardId } = req.params;
+  console.log(boardId);
   try {
     const { boardId } = req.params;
     const list = await listModel.find({ boardId });
@@ -51,7 +54,7 @@ exports.showList =  async (req, res) => {
 
     res.status(200).json({
       message: "list fetched successfully",
-      boards,
+      list,
     });
   } catch (error) {
     console.error("Error fetching boards:", error);

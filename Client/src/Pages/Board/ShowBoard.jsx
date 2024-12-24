@@ -17,7 +17,7 @@ const ShowBoard = () => {
   const navigate = useNavigate();
 
   // Fetch boards from database
-  const fetchBoardData = async () => {
+  const fetchBoardData = async () => { 
     try {
       if (!userId) return;
       const response = await axios.get(
@@ -42,7 +42,7 @@ const ShowBoard = () => {
       return;
     }
 
-    const generatedId = boardData.length; // Use array length as boardId
+    const generatedId = boardData.length;
 
     const newBoardData = {
       boardId: generatedId, // Set the boardId as the current index

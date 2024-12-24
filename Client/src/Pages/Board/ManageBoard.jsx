@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserHeader from "../../Components/UserHeader";
+import axios from "axios";
 
 const ManageBoard = () => {
   const [lists, setLists] = useState([]); // All lists data
@@ -13,17 +14,35 @@ const ManageBoard = () => {
   const navigate = useNavigate();
   const { boardData, userId } = location.state; 
   const bgcolor = boardData.boardColor;
+  const boardId = (boardData._id);
 
   const [showOffcanvas, setShowOffcanvas] = useState(false);
     const handleOffcanvasClose = () => setShowOffcanvas(false);
     const handleOffcanvasShow = () => setShowOffcanvas(true);
+  
+  const fetchListData = async () => { 
+    try {
+      if (!boardId) return;
+      const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
+      console.log(response.data.list);
+      if (response.data.list) {
+        setLists(response.data.list);
+      } else {
+        setLists([]);
+      }
+      
+    } catch (error) {
+      console.error("Error fetching board data:", error);
+      setLists([]);
+    }
+  };
 
   // Add new list
   const handleAddList = () => {
     if (newListName.trim() === "") return;
     const newList = {
       id: lists.length + 1,
-      name: newListName,
+      name: newListName, 
       tasks: [],
     };
     setLists([...lists, newList]);
@@ -41,6 +60,12 @@ const ManageBoard = () => {
     );
     setTaskInputs({ ...taskInputs, [listId]: "" }); // Clear input box
   };
+
+    useEffect(() => {
+      if (boardId) {
+        fetchListData();
+      }
+    }, [boardId]);
 
   return (
   <>
@@ -66,10 +91,10 @@ const ManageBoard = () => {
     <Container fluid className="mt-3">
       <div style={{ display: "flex", padding: "10px", gap: "10px", overflowX: "auto", scrollbarWidth: "none" }}>
         {lists.map((list) => (
-          <div key={list.id} style={{ minWidth: "200px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
-            <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list.name}</div>
+          <div key={list.listId} style={{ minWidth: "200px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
+            <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list.listName}</div>
             <div style={{ marginBottom: "10px" }}>
-              {list.tasks.map((task, index) => (
+              {list.tasks && list.tasks.map((task, index) => (
                 <div key={index} style={{ background: "#fff", borderRadius: "5px", padding: "5px", marginBottom: "5px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)", }} >
                   {task}
                 </div>

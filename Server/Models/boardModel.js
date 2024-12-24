@@ -11,7 +11,7 @@ const boardSchema = new mongoose.Schema({
     },
     boardColor:{
         type:String,
-        required:true
+        required:true 
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,

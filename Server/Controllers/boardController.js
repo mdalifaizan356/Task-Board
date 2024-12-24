@@ -8,7 +8,7 @@ exports.createBoard = async (req, res) => {
   try {
     const userId = req.params.userId;
     const { boardId, boardName, boardColor} = req.body; 
-
+ 
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
