@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <Container fluid>
       <Row>
         <Col>
         <Navbar bg="dark" variant="dark" expand="lg" className="p-2">
@@ -16,7 +15,6 @@ const Header = () => {
     </Navbar>
         </Col>
       </Row>
-    </Container>
   );
 };
 
