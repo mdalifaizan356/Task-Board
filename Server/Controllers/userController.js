@@ -148,127 +148,27 @@ exports.recoverOTPVarification = async (req, res) => {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// exports.recoverPassword = async (req, res) => {
-//     const { Email, newPassword, OTP } = req.body;
-//     const user = await userModel.findOne({ Email });
-//     if (user) {
-//         const randotp = await genertaeOtp();
-//         console.log(randotp);
-//         await userModel.findOneAndUpdate({ Email },{ $set: { OTP : randotp } });
-//         if (randotp) {
-//             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
-//         }
-//         res.send.status(200).json({ message: "User Found" });
-//     }
-//     else{
-//         return res.status(400).json({ message: "Email is not registered" });
-//     }
-//     if (user.OTP) {
-//         const match = user.OTP == OTP;
-//         if(match){
-//             const salt = bcrypt.genSaltSync(10);
-//             const hash = bcrypt.hashSync(newPassword, salt);
-//             await userModel.updateOne(
-//                 { Email },
-//                 { $set: { Password: hash }, $unset: { OTP: "" } }
-//               );
-//             return res.status(200).json({ Email, message: "OTP match" });
-//         } 
-//     }
-//     else{
-//         return res.status(404).json({ message: "OTP not match" });
-//     }
-//   };
-
-
-
-// // Change Password
-// exports.changePassword = async (req, res) => {
-//     console.log(req.body);
-//     const {Email, oldpass, newpass } = req.body
-
-//     const user = await userModel.findOne({ Email });
-//     console.log(user);
-//         if (!user) {
-//             return res.status(400).json({ message: "Email is not registered" });
-//         }
-//         const dataBasePassword = user.Password;
-//         console.log(dataBasePassword);
-//         const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
-//         if(match){
-//                     return res.status(404).json({ message: "Incorrect Password" });
-//         }
-    
-    
-
-// };
+ // Edit profile
+exports.editProfile = async (req, res) => {
+    console.log(req.body);
+    try {
+        const { Email, oldpass, newpass } = req.body;
+        const existUser = await userModel.findOne({ Email });
+        if (existUser) {
+            const dataBasePassword = existUser.Password;
+            const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
+            if (matchPassword) {
+                const updatedUser = await userModel.findOneAndUpdate({ Email },{$set: {Password: bcrypt.hashSync(newpass, bcrypt.genSaltSync(10))}},
+                    { new: true }
+                );
+                return res.status(200).json({Email, message: "Password Change Successfully!",});
+            }
+            else {
+                return res.status(400).json({ message: "Invalid Old Password!" });
+            }
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal Server Error", err });
+    }
+};

@@ -1,22 +1,30 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../ContextProvider/UserContextProvider";
-import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown } from "react-bootstrap";
+// import { UserContext } from "../ContextProvider/UserContextProvider";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser } from "../Redux/Slices/UserSlice";
+import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-
+import calculateFreeDaysLeft from "/src/Utilities/calculateFreeDaysLeft.js";
 
 
 const UserHeader = () => {
   const [show, setShow] = useState(false); 
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // Accessing user data from context
+  // const { user } = useContext(UserContext); // Accessing user data from context
+  const dispatch = useDispatch();
+  const { name } = useSelector((state) => state.user);
 
-
+  const createdDate = useSelector((state) => state.user.createdDate);
+  if (!createdDate) return null; // No user logged in
+  const freeDaysLeft = calculateFreeDaysLeft(createdDate);
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleLogout = () => {
+    dispatch(clearUser());
     localStorage.removeItem("Token");
     navigate("/signin");
   };
@@ -76,18 +84,23 @@ const UserHeader = () => {
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item as={Link} to="/showboard">Your Board</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/taskboard">Add New Board</Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
+        <Button>
+        {freeDaysLeft > 0 ? (
+           `${freeDaysLeft} days left`
+      ) : (
+          "Your free trial has ended."
+      )}
+        </Button>
         {/* <Navbar.Brand as={Link} to="/">Task<span style={{ color: "red" }}>Board</span></Navbar.Brand> */}
-        <h4 style={{color:"red"}}>Welcome {user.Name}</h4>
+        <h4 style={{color:"red"}}>Welcome {name}</h4>
       </Container>
     </Navbar>
     </>
   );
 };
-
 export default UserHeader;

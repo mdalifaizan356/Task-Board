@@ -5,16 +5,15 @@ import axios from "axios";
 import UserHeader from "../../Components/UserHeader";
 
 const EditProfile = () => {
+
   return (
     <>
       <UserHeader/>
       <Container>
       <Row>
         <Col className="mt-5 d-flex justify-content-center">
-          <Form className="mt-5 w-25 border border-danger p-3">
+          <Form className="mt-5 w-25 p-3">
             <h4 className="text-center">Edit Profile</h4>
-            
-            {/* Photo Area with Hidden Input */}
             <Form.Group className="mb-3 text-center">
               <div
                 className="photo-upload rounded-circle mx-auto mb-3 border border-primary overflow-hidden position-relative"
@@ -33,7 +32,6 @@ const EditProfile = () => {
                     objectFit: "cover",
                   }}
                 />
-                {/* Hidden File Input */}
                 <input
                   type="file"
                   className="position-absolute w-100 h-100 opacity-0"
@@ -41,21 +39,16 @@ const EditProfile = () => {
                   onChange={(e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      // Handle file upload preview
                       console.log("File selected:", file.name);
                     }
                   }}
                 />
               </div>
             </Form.Group>
-
-            {/* Username Field */}
             <Form.Group className="mb-3" controlId="formGroupUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control type="text" placeholder="Enter username" />
             </Form.Group>
-
-            {/* Phone Number Field */}
             <Form.Group className="mb-3" controlId="formGroupPhone">
               <Form.Label>Phone Number</Form.Label>
               <Form.Control type="text" placeholder="Enter phone number" />
@@ -64,7 +57,6 @@ const EditProfile = () => {
         </Col>
       </Row>
     </Container>
-
     </>
 
   );

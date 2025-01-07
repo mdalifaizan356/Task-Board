@@ -1,0 +1,82 @@
+/my-project
+|-- /public
+|-- /src
+|   |-- /assets              # Static files like images, fonts, etc.
+|   |-- /components          # Reusable UI components (Buttons, Cards, etc.)
+|   |-- /features            # Feature-wise organized components, like user, products, etc.
+|   |   |-- /user            # User related components, actions, reducers, etc.
+|   |   |-- /products        # Product related components, actions, reducers, etc.
+|   |-- /redux               # Redux-specific files
+|   |   |-- /actions          # Redux action files
+|   |   |-- /reducers         # Redux reducer files
+|   |   |-- /store            # Store configuration file
+|   |   |-- /slices           # Optional: If using Redux Toolkit slices
+|   |-- /pages               # Page components like Home, About, etc.
+|   |-- /services            # API calls, utility functions, etc.
+|   |-- /styles              # Global CSS or styled-components
+|   |-- /App.jsx             # Main app component (contains routing, layout, etc.)
+|   |-- /index.js            # Entry point for React app
+|-- /package.json
+
+
+
+
+
+
+// exports.recoverPassword = async (req, res) => {
+//     const { Email, newPassword, OTP } = req.body;
+//     const user = await userModel.findOne({ Email });
+//     if (user) {
+//         const randotp = await genertaeOtp();
+//         console.log(randotp);
+//         await userModel.findOneAndUpdate({ Email },{ $set: { OTP : randotp } });
+//         if (randotp) {
+//             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
+//         }
+//         res.send.status(200).json({ message: "User Found" });
+//     }
+//     else{
+//         return res.status(400).json({ message: "Email is not registered" });
+//     }
+//     if (user.OTP) {
+//         const match = user.OTP == OTP;
+//         if(match){
+//             const salt = bcrypt.genSaltSync(10);
+//             const hash = bcrypt.hashSync(newPassword, salt);
+//             await userModel.updateOne(
+//                 { Email },
+//                 { $set: { Password: hash }, $unset: { OTP: "" } }
+//               );
+//             return res.status(200).json({ Email, message: "OTP match" });
+//         } 
+//     }
+//     else{
+//         return res.status(404).json({ message: "OTP not match" });
+//     }
+//   };
+
+
+
+// // Change Password
+// exports.changePassword = async (req, res) => {
+//     console.log(req.body);
+//     const {Email, oldpass, newpass } = req.body
+
+//     const user = await userModel.findOne({ Email });
+//     console.log(user);
+//         if (!user) {
+//             return res.status(400).json({ message: "Email is not registered" });
+//         }
+//         const dataBasePassword = user.Password;
+//         console.log(dataBasePassword);
+//         const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
+//         if(match){
+//                     return res.status(404).json({ message: "Incorrect Password" });
+//         }
+    
+    
+
+// };
+
+
+

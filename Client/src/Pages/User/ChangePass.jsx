@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import { UserContext } from "../../ContextProvider/UserContextProvider";
+// import { UserContext } from "../../ContextProvider/UserContextProvider";
+import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -7,12 +8,14 @@ import axios from "axios";
 import UserHeader from "../../Components/UserHeader";
 
 const ChangePass = () => {
-  const { user } = useContext(UserContext);
-  const Email = user ? user.Email : null;
+  // const { user } = useContext(UserContext);
+    const { email } = useSelector((state) => state.user);
+  
+  // const Email = user ? user.Email : null;
   const [formData, setFormData] = useState({
     oldpass: "",
     newpass: "",
-    Email:user.Email
+    Email:email
   });
   const navigate = useNavigate();
 
@@ -32,6 +35,7 @@ const ChangePass = () => {
     } catch (error) {
       console.error("Error during Change Pass:", error);
       alert("Recovry Failed! Please try again.");
+      navigate("/changepass");
     }
   };
 
@@ -41,7 +45,7 @@ const ChangePass = () => {
       <Container>
       <Row className="mt-5 d-flex justify-content-center">
         <Col className="mt-5 d-flex justify-content-center" >
-          <Form className="mt-5 w-25 border border-danger p-3" onSubmit={handleSubmit}>
+          <Form className="mt-5 w-25   p-3" onSubmit={handleSubmit}>
             <h4 className="text-center">Change Password</h4>
 
         <Form.Group className="mb-3" controlId="formOldPass">

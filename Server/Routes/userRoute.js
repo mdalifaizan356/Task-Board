@@ -9,6 +9,8 @@ router.post("/loginUser", userController.loginUser);
 router.patch("/changePassword", userController.changePassword);
 router.patch("/recoverPassword", userController.recoverPassword);
 router.patch("/recoverOTPVarification", userController.recoverOTPVarification);
+router.patch("/editProfile", userController.editProfile);
+
 
 
 

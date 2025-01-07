@@ -25,7 +25,7 @@ function App() {
     <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/signup" element={<SignUp />} />
+                <Route path="/signup" element={<SignUp />} /> 
                 <Route path="/otpverification" element={<OTPVarification />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/recoverpass" element={<RecoverPass />} />
