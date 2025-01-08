@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Container } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import HomeHeader from "../../Components/HomeHeader";
+
+
 
 const SignUp = () => {
   const [formData, setFormData] = useState({ Name: "", Email: "", PhNo: "", Password: "", OTP: "" });
@@ -69,7 +73,9 @@ const SignUp = () => {
   };
 
   return (
-    <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
+    <>
+    <HomeHeader/>
+    <Container style={{ maxWidth: "500px", marginTop: "56px", }}>
       <h1 className="text-center mb-4">Sign Up</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formName">
@@ -154,6 +160,7 @@ const SignUp = () => {
         </p>
       </Form>
     </Container>
+    </>
   );
 };
 

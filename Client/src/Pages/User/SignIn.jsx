@@ -3,14 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../Redux/Slices/UserSlice";
 import { show, hide } from "../../Redux/Slices/PopUpSlice";
 import { Form, Button, Container } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TaskCompletedPopup from "../../Components/PopUp";
+import HomeHeader from "../../Components/HomeHeader";
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+    const { name } = useSelector((state) => state.user);
   const popupState = useSelector((state) => state.popup);
+
 
   const [formData, setFormData] = useState({
     Email: "",
@@ -40,7 +44,6 @@ const SignIn = () => {
 
         localStorage.setItem("Token", token);
 
-        // Show dynamic message in popup
         dispatch(show("Login Successful! Welcome to the dashboard."));
       }
     } catch (error) {
@@ -51,11 +54,18 @@ const SignIn = () => {
 
   const handleClosePopup = () => {
     dispatch(hide());
-    navigate("/userdashboard");
+    if(!name){
+      navigate("/")
+    }
+    else{
+      navigate("/userdashboard")
+    }
   };
 
   return (
-    <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
+    <>
+    <HomeHeader/>
+    <Container style={{ maxWidth: "500px", marginTop: "10%" }}>
       <h1 className="text-center mb-4">Sign In</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formEmail">
@@ -91,6 +101,7 @@ const SignIn = () => {
         />
       )}
     </Container>
+    </>
   );
 };
 

@@ -89,6 +89,7 @@ const UserHeader = () => {
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
+        <h4 style={{color:"crimson"}}>Welcome {name}</h4>
         <Button>
         {freeDaysLeft > 0 ? (
            `${freeDaysLeft} days left`
@@ -96,8 +97,6 @@ const UserHeader = () => {
           "Your free trial has ended."
       )}
         </Button>
-        {/* <Navbar.Brand as={Link} to="/">Task<span style={{ color: "red" }}>Board</span></Navbar.Brand> */}
-        <h4 style={{color:"red"}}>Welcome {name}</h4>
       </Container>
     </Navbar>
     </>

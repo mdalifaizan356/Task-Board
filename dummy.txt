@@ -80,3 +80,38 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+{/* <HomeHeader style={{ position: 'fixed', top: 0, left: 0, width: '50%', zIndex: 1000 }} /> */}
+    <Container fluid className='border border-danger' style={{height:"100vh" , background: "linear-gradient(0deg, rgba(185,26,195,0.8519782913165266) 51%, rgba(91,4,237,0.8323704481792717) 87%)"}}>
+    <Row style={{ position: 'fixed', top: 0, left: 0, width: '50%', zIndex: 1000 }}>
+        <Col>
+        <Navbar bg="dark" variant="dark" expand="lg" className="p-2">
+      <Container fluid>
+        <Navbar.Brand as={Link} to="/">TaskBoard</Navbar.Brand>
+
+        <Button as={Link} to="/signup" variant="primary">Signup </Button>
+      </Container>
+    </Navbar>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <p>
+            Trello makes it easier for teams to manage projects and tasks
+            Simple, flexible, and powerful. All it takes are boards, lists, and cards to get a clear view of who’s doing what and what needs to get done.
+          </p>
+        </Col>
+        <Col>
+          <img src={heroimg} style={{width:"100%"}}/>
+        </Col>
+      </Row>
+    </Container>
