@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import heroimg from "../../public/heroimg.jpeg"
-import HomeHeader from './../Components/HomeHeader';
+import heroimg from "../../../public/heroimg.jpeg"
+import HomeHeader from '../../Components/HomeComponents/HomeHeader';
 
 const Home = () => {
   const  inputStyle={

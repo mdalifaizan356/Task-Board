@@ -1,6 +1,6 @@
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import UserHeader from "../Components/UserHeader";
+import UserHeader from "../../Components/DashComponents/DashHeader";
 
 const PNF = () => {
 

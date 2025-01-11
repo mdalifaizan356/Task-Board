@@ -3,8 +3,9 @@ import { UserContext } from "../../ContextProvider/UserContextProvider";
 import axios from "axios";
 import { Button, Form, Modal, Card, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserHeader from "../../Components/UserHeader";
+import UserHeader from "../../Components/DashComponents/DashHeader";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../Components/DashComponents/DashSidebar";
 
 const ShowBoard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -84,7 +85,8 @@ const ShowBoard = () => {
   return (
     <>
       <UserHeader />
-      <Container className="my-4">
+      <Sidebar/>
+      <Container fluid style={{marginTop:"60px",}}> 
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="text-danger">Boards</h1>
           <Button onClick={() => setShowModal(true)} variant="primary">

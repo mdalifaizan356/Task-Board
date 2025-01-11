@@ -5,7 +5,7 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 // import UserDashboard from "./UserDashboard";
-import UserHeader from "../../Components/UserHeader";
+import UserHeader from "../../Components/DashComponents/DashHeader";
 
 const ChangePass = () => {
   // const { user } = useContext(UserContext);

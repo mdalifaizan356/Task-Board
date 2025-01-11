@@ -2,7 +2,7 @@ import React, { useState, useEffect} from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserHeader from "../../Components/UserHeader";
+import UserHeader from "../../Components/DashComponents/DashHeader";
 import axios from "axios";
 
 const ManageBoard = () => {

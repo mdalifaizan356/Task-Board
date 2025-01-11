@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 // import { UserContext } from "../ContextProvider/UserContextProvider";
 import { useSelector, useDispatch } from "react-redux";
-import { clearUser } from "../Redux/Slices/UserSlice";
+import { clearUser } from "../../Redux/Slices/UserSlice";
 import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -55,9 +55,10 @@ const UserHeader = () => {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark" expand={false} sticky="top">
-        <Container fluid>
-          
+    <Container fluid className='p-0 position-fixed top-0' style={{zIndex:"999"}}>
+    <Row>
+            <Col>
+            <Navbar bg="dark" variant="dark" expand={false} sticky="top">
           <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={handleShow} />
             <Navbar.Offcanvas
               id="offcanvasNavbar"
@@ -97,8 +98,10 @@ const UserHeader = () => {
           "Your free trial has ended."
       )}
         </Button>
-      </Container>
     </Navbar>
+            </Col>
+          </Row>
+        </Container>
     </>
   );
 };

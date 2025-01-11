@@ -4,8 +4,8 @@ import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown} from "react-boot
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate, BrowserRouter, Route, Routes } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import UserHeader from "../../Components/UserHeader";
-import ShowBoard from "../Board/ShowBoard";
+import UserHeader from "../../Components/DashComponents/DashHeader";
+import ShowBoard from "./ShowBoard";
 
 
 const UserDashboard = () => {
@@ -22,7 +22,7 @@ const UserDashboard = () => {
           <ShowBoard/>
           </Col>
         </Row>
-      </Container> */}
+      </Container> */} 
     </>
   );
 };

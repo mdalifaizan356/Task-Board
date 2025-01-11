@@ -3,7 +3,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import HomeHeader from "../../Components/HomeHeader";
+import HomeHeader from "../../Components/HomeComponents/HomeHeader";
 
 
 

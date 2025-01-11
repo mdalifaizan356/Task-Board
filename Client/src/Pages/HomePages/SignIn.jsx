@@ -6,8 +6,8 @@ import { Form, Button, Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import TaskCompletedPopup from "../../Components/PopUp";
-import HomeHeader from "../../Components/HomeHeader";
+import TaskCompletedPopup from "../../Components/CommonComponents/PopUp";
+import HomeHeader from "../../Components/HomeComponents/HomeHeader";
 
 const SignIn = () => {
   const dispatch = useDispatch();

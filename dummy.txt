@@ -22,96 +22,108 @@
 
 
 
-
-// exports.recoverPassword = async (req, res) => {
-//     const { Email, newPassword, OTP } = req.body;
-//     const user = await userModel.findOne({ Email });
-//     if (user) {
-//         const randotp = await genertaeOtp();
-//         console.log(randotp);
-//         await userModel.findOneAndUpdate({ Email },{ $set: { OTP : randotp } });
-//         if (randotp) {
-//             sendMail(`${Email}`, "OTP for CRUD", `${randotp}`);
-//         }
-//         res.send.status(200).json({ message: "User Found" });
-//     }
-//     else{
-//         return res.status(400).json({ message: "Email is not registered" });
-//     }
-//     if (user.OTP) {
-//         const match = user.OTP == OTP;
-//         if(match){
-//             const salt = bcrypt.genSaltSync(10);
-//             const hash = bcrypt.hashSync(newPassword, salt);
-//             await userModel.updateOne(
-//                 { Email },
-//                 { $set: { Password: hash }, $unset: { OTP: "" } }
-//               );
-//             return res.status(200).json({ Email, message: "OTP match" });
-//         } 
-//     }
-//     else{
-//         return res.status(404).json({ message: "OTP not match" });
-//     }
-//   };
+import React, { useState, useEffect, useContext } from "react";
+// import { UserContext } from "../ContextProvider/UserContextProvider";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser } from "../Redux/Slices/UserSlice";
+import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import calculateFreeDaysLeft from "/src/Utilities/calculateFreeDaysLeft.js";
 
 
+const UserHeader = () => {
+  const [show, setShow] = useState(false); 
+  const navigate = useNavigate();
+  // const { user } = useContext(UserContext); // Accessing user data from context
+  const dispatch = useDispatch();
+  const { name } = useSelector((state) => state.user);
 
-// // Change Password
-// exports.changePassword = async (req, res) => {
-//     console.log(req.body);
-//     const {Email, oldpass, newpass } = req.body
+  const createdDate = useSelector((state) => state.user.createdDate);
+  if (!createdDate) return null; // No user logged in
+  const freeDaysLeft = calculateFreeDaysLeft(createdDate);
+  
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-//     const user = await userModel.findOne({ Email });
-//     console.log(user);
-//         if (!user) {
-//             return res.status(400).json({ message: "Email is not registered" });
-//         }
-//         const dataBasePassword = user.Password;
-//         console.log(dataBasePassword);
-//         const matchPassword = await bcrypt.compare(oldpass, dataBasePassword);
-//         if(match){
-//                     return res.status(404).json({ message: "Incorrect Password" });
-//         }
-    
-    
+  const handleLogout = () => {
+    dispatch(clearUser());
+    localStorage.removeItem("Token");
+    navigate("/signin");
+  };
 
-// };
+  useEffect(() => {
+    const token = localStorage.getItem("Token");
 
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Decode token
+        const currentTime = Date.now(); // Current time in milliseconds
 
+        if (decoded.exp * 1000 < currentTime) { // Check expiry
+          // Token is expired
+          localStorage.removeItem("Token");
+          navigate("/signin");
+        }
+      } catch (error) {
+        console.error("Invalid Token", error);
+        localStorage.removeItem("token");
+        navigate("/signin");
+      }
+    } else {
+      // No token found
+      navigate("/signin");
+    }
+  }, [navigate]);
 
+  return (
+    <>
+      <Navbar bg="dark" variant="dark" expand={false} sticky="top">
+        <Container fluid>
+          
+          <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={handleShow} />
+            <Navbar.Offcanvas
+              id="offcanvasNavbar"
+              aria-labelledby="offcanvasNavbarLabel"
+              placement="start"
+              show={show}
+              onHide={handleClose}
+            >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title id="offcanvasNavbarLabel">Menu</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body className="mx-auto">
+            <Nav className="justify-content-end flex-grow-1 pe-3" >
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Account</Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/editprofile">Edit Profile</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/changepass">Change Password</Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                  </Dropdown.Menu>
+              </Dropdown>
 
-
-
-
-
-
-
-
-
-
-{/* <HomeHeader style={{ position: 'fixed', top: 0, left: 0, width: '50%', zIndex: 1000 }} /> */}
-    <Container fluid className='border border-danger' style={{height:"100vh" , background: "linear-gradient(0deg, rgba(185,26,195,0.8519782913165266) 51%, rgba(91,4,237,0.8323704481792717) 87%)"}}>
-    <Row style={{ position: 'fixed', top: 0, left: 0, width: '50%', zIndex: 1000 }}>
-        <Col>
-        <Navbar bg="dark" variant="dark" expand="lg" className="p-2">
-      <Container fluid>
-        <Navbar.Brand as={Link} to="/">TaskBoard</Navbar.Brand>
-
-        <Button as={Link} to="/signup" variant="primary">Signup </Button>
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/showboard">Your Board</Dropdown.Item>
+                  </Dropdown.Menu>
+              </Dropdown>
+            </Nav>
+          </Offcanvas.Body>
+        </Navbar.Offcanvas>
+        <h4 style={{color:"crimson"}}>Welcome {name}</h4>
+        <Button>
+        {freeDaysLeft > 0 ? (
+           `${freeDaysLeft} days left`
+      ) : (
+          "Your free trial has ended."
+      )}
+        </Button>
       </Container>
     </Navbar>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <p>
-            Trello makes it easier for teams to manage projects and tasks
-            Simple, flexible, and powerful. All it takes are boards, lists, and cards to get a clear view of who’s doing what and what needs to get done.
-          </p>
-        </Col>
-        <Col>
-          <img src={heroimg} style={{width:"100%"}}/>
-        </Col>
-      </Row>
-    </Container>
+    </>
+  );
+};
+export default UserHeader;
