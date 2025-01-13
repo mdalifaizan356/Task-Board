@@ -41,7 +41,6 @@ const ChangePass = () => {
 
   return (
   <>
-<UserHeader/>
       <Container>
       <Row className="mt-5 d-flex justify-content-center">
         <Col className="mt-5 d-flex justify-content-center" >

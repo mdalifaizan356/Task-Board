@@ -10,7 +10,7 @@ const HomeHeader = () => {
           <Navbar bg="dark" variant="dark" expand="lg" className="p-2 d-flex justify-content-between">
           <Navbar.Brand as={Link} to="/">TaskBoard</Navbar.Brand>
           <Button as={Link} to="/signin" variant="primary">Log In</Button>
-          </Navbar>
+          </Navbar> 
         </Col>
       </Row>
     </Container>

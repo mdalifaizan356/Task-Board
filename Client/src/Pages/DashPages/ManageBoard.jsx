@@ -2,7 +2,6 @@ import React, { useState, useEffect} from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserHeader from "../../Components/DashComponents/DashHeader";
 import axios from "axios";
 
 const ManageBoard = () => {
@@ -12,9 +11,13 @@ const ManageBoard = () => {
   const [taskInputs, setTaskInputs] = useState({}); // Track each list's task input
   const location = useLocation();
   const navigate = useNavigate();
+
   const { boardData, userId } = location.state; 
   const bgcolor = boardData.boardColor;
   const boardId = (boardData._id);
+
+  console.log(boardData);
+  console.log("userId",userId);
 
   const [showOffcanvas, setShowOffcanvas] = useState(false);
     const handleOffcanvasClose = () => setShowOffcanvas(false);
@@ -69,7 +72,6 @@ const ManageBoard = () => {
 
   return (
   <>
-    <UserHeader/>
     <Navbar variant="dark" expand={false} sticky="top" className="py-1" style={{ height: "40px", fontSize: "14px", display: "flex", alignItems: "center", justifyContent: "end", backgroundColor: bgcolor, }} >
       <h5>{boardData.boardName}</h5>
       <Button onClick={() => setShowModal(true)} style={{ fontSize: "14px", padding: "5px 15px", marginLeft: "10px", backgroundColor: bgcolor, border: "none", }} > Create List </Button>

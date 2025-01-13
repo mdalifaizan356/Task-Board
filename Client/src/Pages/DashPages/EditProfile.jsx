@@ -8,7 +8,6 @@ const EditProfile = () => {
 
   return (
     <>
-      <UserHeader/>
       <Container>
       <Row>
         <Col className="mt-5 d-flex justify-content-center">

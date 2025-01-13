@@ -66,6 +66,7 @@ const UserHeader = () => {
               placement="start"
               show={show}
               onHide={handleClose}
+              style={{marginTop:"50px"}}
             >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title id="offcanvasNavbarLabel">Menu</Offcanvas.Title>
@@ -75,8 +76,8 @@ const UserHeader = () => {
               <Dropdown as={Nav.Item}>
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Account</Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/editprofile">Edit Profile</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/changepass">Change Password</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/dashboard/editprofile">Edit Profile</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/dashboard/changepass">Change Password</Dropdown.Item>
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>
@@ -84,11 +85,11 @@ const UserHeader = () => {
               <Dropdown as={Nav.Item}>
                 <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/showboard">Your Board</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/dashboard/showboard">Your Board</Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>
             </Nav>
-          </Offcanvas.Body>
+          </Offcanvas.Body> 
         </Navbar.Offcanvas>
         <h4 style={{color:"crimson"}}>Welcome {name}</h4>
         <Button>

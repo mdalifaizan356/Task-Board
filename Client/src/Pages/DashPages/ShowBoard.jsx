@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../ContextProvider/UserContextProvider";
+// import { UserContext } from "../../ContextProvider/UserContextProvider";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { Button, Form, Modal, Card, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserHeader from "../../Components/DashComponents/DashHeader";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../../Components/DashComponents/DashSidebar";
 
 const ShowBoard = () => {
   const [showModal, setShowModal] = useState(false);
-  const [newBoard, setNewBoard] = useState({ name: "", color: "#000000" });
+  const [newBoard, setNewBoard] = useState({ name: "", color: "#E84711" });
   const [boardData, setBoardData] = useState([]);
 
-  const { user } = useContext(UserContext);
-  const userId = user ? user._id : null;
+  const user = useSelector(state=>state.user)
+  // const { user } = useContext(UserContext);
+  const userId = user ? user.id : null;
+  console.log(userId);
 
   const navigate = useNavigate();
 
@@ -43,22 +44,19 @@ const ShowBoard = () => {
       return;
     }
 
-    const generatedId = boardData.length;
 
     const newBoardData = {
-      boardId: generatedId, // Set the boardId as the current index
       boardName: newBoard.name,
       boardColor: newBoard.color,
     };
 
     try {
-      const response = await axios.post(
-        `http://localhost:6080/newboard/createBoard/${userId}`,
-        newBoardData
-      );
+      const response = await axios.post(`http://localhost:6080/newboard/createBoard/${userId}`,
+      newBoardData
+    );
       if (response.status === 200) {
         alert("Board Created Successfully!");
-        setNewBoard({ name: "", color: "#000000" }); // Reset form
+        setNewBoard({ name: "", color: "#E84711" }); // Reset form
         setShowModal(false);
         await fetchBoardData(); // Re-fetch updated board data
       }
@@ -72,10 +70,10 @@ const ShowBoard = () => {
     if (userId) {
       fetchBoardData();
     }
-  }, [userId]);
+  }, [userId]); 
 
   const viewHandler = (board) => {
-    navigate(`/manageboard/${board.boardId}`, { state: { boardData: board } });
+    navigate(`/dashboard/manageboard/${board._id}`, { state: { boardData: board } });
   };
 
   const handleInputChange = (field, value) => {
@@ -84,9 +82,7 @@ const ShowBoard = () => {
 
   return (
     <>
-      <UserHeader />
-      <Sidebar/>
-      <Container fluid style={{marginTop:"60px",}}> 
+      <Container fluid> 
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="text-danger">Boards</h1>
           <Button onClick={() => setShowModal(true)} variant="primary">
@@ -100,7 +96,7 @@ const ShowBoard = () => {
         ) : (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
             {boardData.map((board, index) => (
-              <Col key={board.boardId}>
+              <Col key={board}>
                 <Card
                   className="shadow-sm"
                   style={{
@@ -111,7 +107,7 @@ const ShowBoard = () => {
                 >
                   <Card.Body>
                     <Card.Title className="text-dark">{board.boardName}</Card.Title>
-                    <Card.Text className="text-muted">Board ID: {board.boardId}</Card.Text>
+                    <Card.Text className="text-muted">Board ID: {board._id}</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>

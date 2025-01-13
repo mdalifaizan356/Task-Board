@@ -7,7 +7,9 @@ const boardModel = require("../Models/boardModel");
 exports.createBoard = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { boardId, boardName, boardColor} = req.body; 
+    const { boardName, boardColor} = req.body; 
+
+    console.log(userId, boardName, boardColor);
  
     const user = await userModel.findById(userId);
     if (!user) {
@@ -15,7 +17,6 @@ exports.createBoard = async (req, res) => {
     }
 
     const newBoard = new boardModel({
-      boardId,
       boardName,
       userId: user._id,
       boardColor

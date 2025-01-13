@@ -39,7 +39,7 @@ const SignIn = () => {
           phone: databaseEmail.PhNo,
           role: databaseEmail.Role,
           createdDate: databaseEmail.createdAt,
-          id: databaseEmail._id,
+          _id: databaseEmail._id,
         }));
 
         localStorage.setItem("Token", token);
@@ -58,7 +58,7 @@ const SignIn = () => {
       navigate("/")
     }
     else{
-      navigate("/userdashboard")
+      navigate("/dashboard")
     }
   };
 
