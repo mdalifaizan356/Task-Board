@@ -3,11 +3,11 @@
  const listModel = require("../Models/listModel");
  const taskModel = require("../Models/taskModel");
   
- // Create Board
+ // Create Task
  exports.createTask = async (req, res) => {
    try {
      const listId = req.params.listId;
-     const { taskId,  taskName } = req.body;
+     const { taskName } = req.body;
  
      const list = await listModel.findById(listId);
      if (!list) {
@@ -15,7 +15,6 @@
      }
  
      const newTask = new taskModel({
-       taskId,
        taskName,
        listId: list._id,
      });
@@ -32,22 +31,50 @@
  };
  
  
- // Show Board
- exports.showAllBoard =  async (req, res) => {
-   try {
-     const { userId } = req.params;
-     const boards = await boardModel.find({ userId });
+//  // Show Task
+//  exports.showList =  async (req, res) => {
+//    console.log(req.params)
+//    const { listId } = req.params;
+//    console.log(listId);
+//    try {
+//      const { listId } = req.params;
+//     //  const task = await taskModel.find({ listId });
+//     const task = await taskModel.find().populate('listId');
  
-     if (boards.length === 0) {
-       return res.status(404).json({ message: "No boards found for this user" });
-     }
+//      if (task.length === 0) {
+//        return res.status(404).json({ message: "No task found" });
+//      }
  
-     res.status(200).json({
-       message: "Boards fetched successfully",
-       boards,
-     });
-   } catch (error) {
-     console.error("Error fetching boards:", error);
-     res.status(500).json({ message: "Server error", error });
-   }
- };
+//      res.status(200).json({
+//        message: "task fetched successfully",
+//        task,
+//      });
+//    } catch (error) {
+//      console.error("Error fetching boards:", error);
+//      res.status(500).json({ message: "Server error", error });
+//    }
+//  };
+
+
+
+
+
+// Show Task
+exports.showAllTask =  async (req, res) => {
+  try {
+   const task = await taskModel.find().populate('listId');
+
+    if (task.length === 0) {
+      return res.status(404).json({ message: "No task found" });
+    }
+    console.log(task)
+    res.status(200).json({
+      message: "task fetched successfully",
+    
+      task,
+    });
+  } catch (error) {
+    console.error("Error fetching boards:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};

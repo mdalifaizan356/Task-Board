@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const boardSchema = new mongoose.Schema({
-    boardId:{
-        type: Number,
-        required: true,
-    },
     boardName:{
         type:String,
         required:true
@@ -12,7 +8,7 @@ const boardSchema = new mongoose.Schema({
     boardColor:{
         type:String,
         required:true 
-    },
+    }, 
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref: "users",

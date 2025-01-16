@@ -2,6 +2,7 @@ const { json } = require("express");
 const mongoose = require("mongoose");
 const listModel = require("../Models/listModel");
 const boardModel = require("../Models/boardModel");
+const taskModel = require("../Models/taskModel");
 
 
  
@@ -9,7 +10,7 @@ const boardModel = require("../Models/boardModel");
 exports.createList = async (req, res) => {
   try {
     const boardId = req.params.boardId;
-    const { listId, listName, listColor} = req.body;
+    const {listName, listColor} = req.body;
     console.log(boardId)
 
     const board = await boardModel.findById(boardId);
@@ -20,7 +21,6 @@ exports.createList = async (req, res) => {
     }
 
     const newList = new listModel({
-      listId,
       listName,
       boardId: board._id,
       listColor
@@ -39,6 +39,31 @@ exports.createList = async (req, res) => {
 
 
 
+// // Show List
+// exports.showList =  async (req, res) => {
+//   // console.log(req.params)
+//   const { boardId } = req.params;
+//   console.log(boardId);
+//   try {
+//     const { boardId } = req.params;
+//     const list = await listModel.find({ boardId });
+
+//     if (list.length === 0) {
+//       return res.status(404).json({ message: "No list found" });
+//     }
+
+//     res.status(200).json({
+//       message: "list fetched successfully",
+//       list,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching boards:", error);
+//     res.status(500).json({ message: "Server error", error });
+//   }
+// };
+
+
+
 // Show List
 exports.showList =  async (req, res) => {
   // console.log(req.params)
@@ -46,7 +71,7 @@ exports.showList =  async (req, res) => {
   console.log(boardId);
   try {
     const { boardId } = req.params;
-    const list = await listModel.find({ boardId });
+    const list = await listModel.find().populate(taskId);
 
     if (list.length === 0) {
       return res.status(404).json({ message: "No list found" });

@@ -14,7 +14,7 @@ const ShowBoard = () => {
   const user = useSelector(state=>state.user)
   // const { user } = useContext(UserContext);
   const userId = user ? user.id : null;
-  console.log(userId);
+  // console.log(userId);
 
   const navigate = useNavigate();
 
@@ -43,8 +43,6 @@ const ShowBoard = () => {
       alert("Please provide Name and Color for the board.");
       return;
     }
-
-
     const newBoardData = {
       boardName: newBoard.name,
       boardColor: newBoard.color,
@@ -56,9 +54,9 @@ const ShowBoard = () => {
     );
       if (response.status === 200) {
         alert("Board Created Successfully!");
-        setNewBoard({ name: "", color: "#E84711" }); // Reset form
+        setNewBoard({ name: "", color: "#E84711" });
         setShowModal(false);
-        await fetchBoardData(); // Re-fetch updated board data
+        await fetchBoardData();
       }
     } catch (error) {
       console.error("Error creating board:", error);
@@ -96,7 +94,7 @@ const ShowBoard = () => {
         ) : (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
             {boardData.map((board, index) => (
-              <Col key={board}>
+              <Col key={board._id}>
                 <Card
                   className="shadow-sm"
                   style={{
