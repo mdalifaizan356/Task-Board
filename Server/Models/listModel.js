@@ -14,6 +14,10 @@ const listSchema = new mongoose.Schema({
         ref: "boards",
         required: true
     },
+    taskId:[{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "tasks",
+        }],
 },
 {
     versionKey:false,

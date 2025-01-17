@@ -26,32 +26,13 @@ const ManageBoard = () => {
     const handleOffcanvasClose = () => setShowOffcanvas(false);
     const handleOffcanvasShow = () => setShowOffcanvas(true);
   
-  // const fetchListData = async () => { 
-  //   try {
-  //     if (!boardId) return;
-  //     const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
-  //     console.log(response.data.list);
-  //     if (response.data.list) {
-  //       setLists(response.data.list);
-  //     } else {
-  //       setLists([]);
-  //     }
-      
-  //   } catch (error) {
-  //     console.error("Error fetching board data:", error);
-  //     setLists([]);
-  //   }
-  // };
-
-
-
   const fetchListData = async () => { 
     try {
       if (!boardId) return;
-      const response = await axios.get(`http://localhost:6080/newTask/showAllTask`);
-      console.log(response.data.list);
-      if (response.data.task) {
-        setLists(response.data.task);
+      const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
+      console.log(response.data.lists);
+      if (response.data.lists) {
+        setLists(response.data.lists);
       } else {
         setLists([]);
       }
@@ -116,7 +97,7 @@ const ManageBoard = () => {
       <div style={{ display: "flex", padding: "10px", gap: "10px", overflowX: "auto", scrollbarWidth: "none" }}>
         {lists.map((list) => (
           <div key={list._id} style={{ minWidth: "200px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
-            <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list.listId.listName}</div>
+            <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list.listName}</div>
             <div style={{ marginBottom: "10px" }}>
               {list.tasks && list.tasks.map((task, index) => (
                 <div key={index} style={{ background: "#fff", borderRadius: "5px", padding: "5px", marginBottom: "5px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)", }} >
