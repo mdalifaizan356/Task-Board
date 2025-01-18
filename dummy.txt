@@ -1,233 +1,67 @@
-/my-project
-|-- /public
-|-- /src
-|   |-- /assets              # Static files like images, fonts, etc.
-|   |-- /components          # Reusable UI components (Buttons, Cards, etc.)
-|   |-- /features            # Feature-wise organized components, like user, products, etc.
-|   |   |-- /user            # User related components, actions, reducers, etc.
-|   |   |-- /products        # Product related components, actions, reducers, etc.
-|   |-- /redux               # Redux-specific files
-|   |   |-- /actions          # Redux action files
-|   |   |-- /reducers         # Redux reducer files
-|   |   |-- /store            # Store configuration file
-|   |   |-- /slices           # Optional: If using Redux Toolkit slices
-|   |-- /pages               # Page components like Home, About, etc.
-|   |-- /services            # API calls, utility functions, etc.
-|   |-- /styles              # Global CSS or styled-components
-|   |-- /App.jsx             # Main app component (contains routing, layout, etc.)
-|   |-- /index.js            # Entry point for React app
-|-- /package.json
-
-
-
-
-
-import React, { useState, useEffect, useContext } from "react";
-// import { UserContext } from "../ContextProvider/UserContextProvider";
-import { useSelector, useDispatch } from "react-redux";
-import { clearUser } from "../../Redux/Slices/UserSlice";
-import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import calculateFreeDaysLeft from "/src/Utilities/calculateFreeDaysLeft.js";
-
-
-const UserHeader = () => {
-  const [show, setShow] = useState(false); 
-  const navigate = useNavigate();
-  // const { user } = useContext(UserContext); // Accessing user data from context
-  const dispatch = useDispatch();
-  const { name } = useSelector((state) => state.user);
-
-  const createdDate = useSelector((state) => state.user.createdDate);
-  if (!createdDate) return null; // No user logged in
-  const freeDaysLeft = calculateFreeDaysLeft(createdDate);
-  
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const handleLogout = () => {
-    dispatch(clearUser());
-    localStorage.removeItem("Token");
-    navigate("/signin");
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem("Token");
-
-    if (token) {
-      try {
-        const decoded = jwtDecode(token); // Decode token
-        const currentTime = Date.now(); // Current time in milliseconds
-
-        if (decoded.exp * 1000 < currentTime) { // Check expiry
-          // Token is expired
-          localStorage.removeItem("Token");
-          navigate("/signin");
-        }
-      } catch (error) {
-        console.error("Invalid Token", error);
-        localStorage.removeItem("token");
-        navigate("/signin");
-      }
-    } else {
-      // No token found
-      navigate("/signin");
-    }
-  }, [navigate]);
-
-  return (
-    <>
-    <Container fluid className='p-0 position-fixed top-0' style={{zIndex:"999"}}>
-    <Row>
-            <Col>
-            <Navbar bg="dark" variant="dark" expand={false} sticky="top">
-          <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={handleShow} />
-            <Navbar.Offcanvas
-              id="offcanvasNavbar"
-              aria-labelledby="offcanvasNavbarLabel"
-              placement="start"
-              show={show}
-              onHide={handleClose}
-            >
-          <Offcanvas.Header closeButton>
-            <Offcanvas.Title id="offcanvasNavbarLabel">Menu</Offcanvas.Title>
-          </Offcanvas.Header>
-          <Offcanvas.Body className="mx-auto">
-            <Nav className="justify-content-end flex-grow-1 pe-3" >
-              <Dropdown as={Nav.Item}>
-                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Account</Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/editprofile">Edit Profile</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/changepass">Change Password</Dropdown.Item>
-                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                  </Dropdown.Menu>
-              </Dropdown>
-
-              <Dropdown as={Nav.Item}>
-                <Dropdown.Toggle as={Nav.Link} variant="link" id="dropdown-custom-components">Task Board</Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/showboard">Your Board</Dropdown.Item>
-                  </Dropdown.Menu>
-              </Dropdown>
-            </Nav>
-          </Offcanvas.Body>
-        </Navbar.Offcanvas>
-        <h4 style={{color:"crimson"}}>Welcome {name}</h4>
-        <Button>
-        {freeDaysLeft > 0 ? (
-           `${freeDaysLeft} days left`
-      ) : (
-          "Your free trial has ended."
-      )}
-        </Button>
-    </Navbar>
-            </Col>
-          </Row>
-        </Container>
-    </>
-  );
-};
-export default UserHeader;
-
-
-
-
-const mongoose = require("mongoose");
-
-const boardSchema = new mongoose.Schema({
-    // boardId:{
-    //     type: Number,
-    //     required: true,
-    // },
-    boardName:{
-        type:String,
-        required:true
-    },
-    boardColor:{
-        type:String,
-        required:true 
-    },
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref: "users",
-        required: true
-    },
-},
-{
-    versionKey:false,
-    timestamps:true
-}
-);
-
-module.exports = mongoose.model("boards", boardSchema);
-
-
-
-
-
-import React, { useState, useEffect, useContext } from "react";
-// import { UserContext } from "../../ContextProvider/UserContextProvider";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { Button, Form, Modal, Card, Row, Col, Container } from "react-bootstrap";
+import React, { useState, useEffect} from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button, Container, Col, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const ShowBoard = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [newBoard, setNewBoard] = useState({ name: "", color: "#E84711" });
-  const [boardData, setBoardData] = useState([]);
+const ManageBoard = () => {
+  const [lists, setLists] = useState([]);
+  const [newListInput, setNewListInput] = useState(false);
+  const [newListName, setNewListName] = useState(""); 
+  
+  const [taskInputs, setTaskInputs] = useState("");
 
-  const user = useSelector(state=>state.user)
-  // const { user } = useContext(UserContext);
-  const userId = user ? user.id : null;
-  console.log(userId);
-
+  const location = useLocation();
   const navigate = useNavigate();
 
-  // Fetch boards from database
-  const fetchBoardData = async () => { 
+  const { boardData, userId } = location.state; 
+  const bgcolor = boardData.boardColor; 
+  const boardId = (boardData._id);
+
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+    const handleOffcanvasClose = () => setShowOffcanvas(false);
+    const handleOffcanvasShow = () => setShowOffcanvas(true);
+
+  //Fetch List With TAsk
+  const fetchListData = async () => { 
     try {
-      if (!userId) return;
-      const response = await axios.get(
-        `http://localhost:6080/newboard/showBoard/${userId}`
-      );
-      if (response.data.boards) {
-        setBoardData(response.data.boards);
+      if (!boardId) return;
+      const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
+      console.log(response.data.list);
+      if (response.data.list) {
+        setLists(response.data.list);
       } else {
-        setBoardData([]);
+        setLists([]);
       }
+      
     } catch (error) {
       console.error("Error fetching board data:", error);
-      setBoardData([]);
+      setLists([]);
     }
   };
 
-  // Add new board to database
-  const handleSubmit = async (e) => {
+  // Add new list
+  const handleAddList = async(e) => {
     e.preventDefault();
-    if (newBoard.name.trim() === "" || newBoard.color.trim() === "") {
+    console.log(newListName);
+    // e.preventDefault();
+    if (newListName.trim() === ""){
       alert("Please provide Name and Color for the board.");
       return;
+    } 
+    const listData = {
+      listName: newListName,
+      listColor: bgcolor,
     }
-
-    // const generatedId = boardData.length;
-
-    const newBoardData = {
-      // boardId: generatedId+1, // Set the boardId as the current index
-      boardName: newBoard.name,
-      boardColor: newBoard.color,
-    };
-
     try {
-      const response = await axios.post(`http://localhost:6080/newboard/createBoard/${userId}`,newBoardData);
+      const response = await axios.post(`http://localhost:6080/newList/createList/${boardId}`,
+        listData
+    );
       if (response.status === 200) {
-        alert("Board Created Successfully!");
-        setNewBoard({ name: "", color: "#E84711" }); // Reset form
-        setShowModal(false);
-        await fetchBoardData(); // Re-fetch updated board data
+        alert("List Created Successfully!");
+        setNewListInput(false);
+        setNewListName("");
+        await fetchListData();
       }
     } catch (error) {
       console.error("Error creating board:", error);
@@ -235,92 +69,80 @@ const ShowBoard = () => {
     }
   };
 
+
+  // Add new task
+  const handleAddTask = (listId, taskName) => {
+    if (taskName.trim() === "") return;
+    setLists(
+      lists.map((list) =>
+        list.id === listId ? { ...list, tasks: [...list.tasks, taskName] } : list
+      )
+    );
+    setTaskInputs({ ...taskInputs, [listId]: "" }); // Clear input box
+  };
+
+
+
   useEffect(() => {
-    if (userId) {
-      fetchBoardData();
+    if (boardId) {
+      fetchListData();
     }
-  }, [userId]); 
-
-  const viewHandler = (board) => {
-    navigate(`/dashboard/manageboard/${board._id}`, { state: { boardData: board } });
-  };
-
-  const handleInputChange = (field, value) => {
-    setNewBoard((prev) => ({ ...prev, [field]: value }));
-  };
+  }, [boardId]);
 
   return (
-    <>
-      <Container fluid> 
-        <div className="d-flex justify-content-between align-items-center">
-          <h1 className="text-danger">Boards</h1>
-          <Button onClick={() => setShowModal(true)} variant="primary">
-            Create Board
-          </Button>
-        </div>
-      </Container>
-      <Container className="mt-4">
-        {boardData.length === 0 ? (
-          <h2 className="text-center text-muted">No Boards Available</h2>
-        ) : (
-          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-            {boardData.map((board, index) => (
-              <Col key={board._id}>
-                <Card
-                  className="shadow-sm"
-                  style={{
-                    backgroundColor: board.boardColor || "#FFFFFF",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => viewHandler(board)}
-                >
-                  <Card.Body>
-                    <Card.Title className="text-dark">{board.boardName}</Card.Title>
-                    <Card.Text className="text-muted">Board ID: {board._id}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        )}
-      </Container>
+  <>
+    <Navbar variant="dark" expand={false} className="py-1 border border-danger" style={{ height: "40px", fontSize: "14px", display: "flex", alignItems: "center", justifyContent: "end", backgroundColor: bgcolor, }} >
+      <h5>{boardData.boardName}</h5>
+      <Button className="navbar-toggler" onClick={handleOffcanvasShow} aria-label="Toggle navigation" style={{ background: "transparent", border: "none", fontSize: "20px", color: "white", marginRight: "10px", display: "flex", alignItems: "center" }}>&#x2022;&#x2022;&#x2022; </Button>
+      <Navbar.Offcanvas id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" placement="end" show={showOffcanvas} onHide={handleOffcanvasClose} style={{ marginTop: "95px", backgroundColor: bgcolor, width:"20%" }} >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title id="offcanvasNavbarLabel">Board Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Nav className="flex-column text-center">
+            <Nav.Link as={Link} to="/" style={{ border: "none", background: "none", padding: "0", color:"white" }}>About This Board</Nav.Link>
+            <Nav.Link as="button" style={{ border: "none", background: "none", padding: "0", color:"white" }}>Delete Board </Nav.Link>
+            <Nav.Link as="button" style={{ border: "none", background: "none", padding: "0", color:"white" }}>Edit Board </Nav.Link>
+          </Nav>
+        </Offcanvas.Body>
+      </Navbar.Offcanvas>
+    </Navbar>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Create New Board</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Board Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter name for the board"
-                value={newBoard.name || ""}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Board Color</Form.Label>
-              <Form.Control
-                type="color"
-                value={newBoard.color || "#000000"}
-                onChange={(e) => handleInputChange("color", e.target.value)}
-              />
-            </Form.Group>
-            <Button variant="success" type="submit" className="w-100">
-              Create Board
-            </Button>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <Container fluid className="mt-3">
+      <div style={{ display: "flex", padding: "10px", gap: "10px", overflowX: "auto", scrollbarWidth: "none" }}>
+        {lists.map((list) => (
+          <div key={list._id} style={{ minWidth: "200px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
+            <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list.listName}</div>
+            <div style={{ marginBottom: "10px" }}>
+              {list.taskId && list.taskId.map((task, index) => (
+                <div key={index} style={{ background: "#fff", borderRadius: "5px", padding: "5px", marginBottom: "5px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)", }} >
+                  {task.taskName}
+                </div>
+                ))}
+            </div>
+              <Form.Control type="text" value={taskInputs[list.id] || ""} onChange={(e) => setTaskInputs({ ...taskInputs, [list.id]: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAddTask(list.id, taskInputs[list.id]);
+                  }}
+                placeholder="Add a task..." size="sm" style={{ fontSize: "14px" }}/>
+          </div>
+          ))}
+          <div style={{ minWidth: "200px", maxWidth: "200px", backgroundColor: bgcolor, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "8px", cursor: "pointer", height: "fit-content", padding:"5px" }}onClick={() => setNewListInput(true)} >
+            {newListInput ? (
+              <Form.Control type="text" value={newListName} onChange={(e) => setNewListName(e.target.value)} onKeyDown={(e) => {
+                if (e.key === "Enter") handleAddList(e);
+                }}
+                placeholder="Enter List Name" size="sm" style={{ fontSize: "14px", width: "90%", height: "fit-content", }} />
+                ) : ( <h5>+ Add List</h5>
+                )}
+          </div>
+      </div>
+    </Container>
     </>
   );
 };
 
-export default ShowBoard;
+export default ManageBoard;
+
+
+

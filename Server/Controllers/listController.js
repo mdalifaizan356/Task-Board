@@ -26,7 +26,7 @@ exports.createList = async (req, res) => {
     });
 
     const savedList = await newList.save();
-    res.status(201).json({
+    res.status(200).json({
       message: "List created successfully",
       list: savedList, 
     });
@@ -41,14 +41,15 @@ exports.createList = async (req, res) => {
 exports.showList =  async (req, res) => {
   // console.log(req.params)
   const { boardId } = req.params;
-  console.log(boardId);
+  // console.log(boardId);
   try {
     const { boardId } = req.params;
-    const list = await listModel.find({ boardId });
+    const list = await listModel.find({ boardId }).populate("taskId");
 
     if (list.length === 0) {
       return res.status(404).json({ message: "No list found" });
     }
+    console.log(list);
 
     res.status(200).json({
       message: "list fetched successfully",
@@ -59,36 +60,3 @@ exports.showList =  async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
-
-
-// // Show List
-// exports.showList =  async (req, res) => {
-//   const { boardId } = req.params;
-//     try {
-//         const lists = await listModel.find({ boardId });
-//         if (!lists.length) {
-//             return res.status(404).json({ message: "No lists found" });
-//         }
-
-//         // Fetch tasks for each list dynamically
-//         const listsWithTasks = await Promise.all(
-//             lists.map(async (list) => {
-//                 const tasks = await taskModel.find({ listId: list._id });
-//                 return {
-//                     ...list._doc,
-//                     tasks,
-//                 };
-//             })
-//         );
-
-//         res.status(200).json({
-//             message: "Lists fetched successfully",
-//             lists: listsWithTasks,
-//         });
-//     } catch (error) {
-//         console.error("Error fetching lists:", error);
-//         res.status(500).json({ message: "Server error", error });
-//     }
-// };
-

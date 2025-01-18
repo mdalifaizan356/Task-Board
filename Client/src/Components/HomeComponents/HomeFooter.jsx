@@ -22,7 +22,7 @@ const HomeFooter = () => {
   return (
     <>
   
-            <Container fluid className='mt-5' style={{background:"#182c4e", color:"white"}}>
+            <Container fluid className='mt-5' style={{background:"#182c4e", color:"white", height:"50vh"}}>
               <Row>
                 <Col>
                 <Link>About Us</Link>

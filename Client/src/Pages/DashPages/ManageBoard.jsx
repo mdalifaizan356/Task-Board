@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Container, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
+import { Button, Container, Col, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
@@ -8,9 +8,8 @@ const ManageBoard = () => {
   const [lists, setLists] = useState([]);
   const [newListInput, setNewListInput] = useState(false);
   const [newListName, setNewListName] = useState(""); 
+  
   const [taskInputs, setTaskInputs] = useState({});
-
-  console.log(lists);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,20 +18,18 @@ const ManageBoard = () => {
   const bgcolor = boardData.boardColor; 
   const boardId = (boardData._id);
 
-  // console.log(boardData);
-  // console.log("userId",userId);
-
   const [showOffcanvas, setShowOffcanvas] = useState(false);
     const handleOffcanvasClose = () => setShowOffcanvas(false);
     const handleOffcanvasShow = () => setShowOffcanvas(true);
-  
+
+  //Fetch List With TAsk
   const fetchListData = async () => { 
     try {
       if (!boardId) return;
       const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
-      console.log(response.data.lists);
-      if (response.data.lists) {
-        setLists(response.data.lists);
+      console.log(response.data.list);
+      if (response.data.list) {
+        setLists(response.data.list);
       } else {
         setLists([]);
       }
@@ -44,35 +41,82 @@ const ManageBoard = () => {
   };
 
   // Add new list
-  const handleAddList = () => {
-    if (newListName.trim() === "") return;
-    const newList = {
-      id: lists.length + 1,
-      name: newListName, 
-      tasks: [],
-    };
-    setLists([...lists, newList]);
-    setNewListInput(false);
-    setNewListName("");
-  };
-
-
-  // Add new task
-  const handleAddTask = (listId, taskName) => {
-    if (taskName.trim() === "") return;
-    setLists(
-      lists.map((list) =>
-        list.id === listId ? { ...list, tasks: [...list.tasks, taskName] } : list
-      )
+  const handleAddList = async(e) => {
+    e.preventDefault();
+    console.log(newListName);
+    // e.preventDefault();
+    if (newListName.trim() === ""){
+      alert("Please provide Name and Color for the board.");
+      return;
+    } 
+    const listData = {
+      listName: newListName,
+      listColor: bgcolor,
+    }
+    try {
+      const response = await axios.post(`http://localhost:6080/newList/createList/${boardId}`,
+        listData
     );
-    setTaskInputs({ ...taskInputs, [listId]: "" }); // Clear input box
+      if (response.status === 200) {
+        alert("List Created Successfully!");
+        setNewListInput(false);
+        setNewListName("");
+        await fetchListData();
+      }
+    } catch (error) {
+      console.error("Error creating board:", error);
+      alert("Failed to create board. Please try again.");
+    }
   };
 
-    useEffect(() => {
-      if (boardId) {
-        fetchListData();
-      }
-    }, [boardId]);
+
+  // // Add new task
+  // const handleAddTask = (e, listId, newTaskName) => {
+  //   // console.log(listId);
+  //   // console.log(newTaskName);
+  //   // console.log(taskInputs);
+
+  //   // if (taskName.trim() === "") return;
+  //   // setLists(
+  //   //   lists.map((list) =>
+  //   //     list.id === listId ? { ...list, tasks: [...list.tasks, taskName] } : list
+  //   //   )
+  //   // );
+  //   // setTaskInputs({ ...taskInputs, [listId]: "" });
+  // };
+
+
+// Add new task
+const handleAddTask = async(e, listId, taskName) => {
+e.preventDefault();
+  if (taskName.trim() === "") return;
+  const taskData ={
+    listId,
+    taskName
+  }
+  try {
+    const response = await axios.post(`http://localhost:6080/newTask/createTask`,
+      taskData
+  );
+    if (response.status === 201) {
+      alert("task Created Successfully!");
+      setTaskInputs({});
+      await fetchListData();
+    }
+  } catch (error) {
+    console.error("Error creating board:", error);
+    alert("Failed to create board. Please try again.");
+  }
+  
+};
+
+
+
+  useEffect(() => {
+    if (boardId) {
+      fetchListData();
+    }
+  }, [boardId]);
 
   return (
   <>
@@ -96,18 +140,19 @@ const ManageBoard = () => {
     <Container fluid className="mt-3">
       <div style={{ display: "flex", padding: "10px", gap: "10px", overflowX: "auto", scrollbarWidth: "none" }}>
         {lists.map((list) => (
-          <div key={list._id} style={{ minWidth: "200px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
+          <div key={list._id} style={{ minWidth: "300px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
             <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list.listName}</div>
+            <div style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>{list._id}</div>
             <div style={{ marginBottom: "10px" }}>
-              {list.tasks && list.tasks.map((task, index) => (
-                <div key={index} style={{ background: "#fff", borderRadius: "5px", padding: "5px", marginBottom: "5px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)", }} >
-                  {task}
+              {list.taskId && list.taskId.map((task, index) => (
+                <div key={task.taskId} style={{ background: "#fff", borderRadius: "5px", padding: "5px", marginBottom: "5px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)", }} >
+                  {task.taskName}
                 </div>
                 ))}
             </div>
-              <Form.Control type="text" value={taskInputs[list.id] || ""} onChange={(e) => setTaskInputs({ ...taskInputs, [list.id]: e.target.value })}
+              <Form.Control type="text" value={taskInputs[list._id] || ""} onChange={(e) => setTaskInputs({ ...taskInputs, [list._id]: e.target.value })}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAddTask(list.id, taskInputs[list.id]);
+                  if (e.key === "Enter") handleAddTask(e, list._id, taskInputs[list._id]);
                   }}
                 placeholder="Add a task..." size="sm" style={{ fontSize: "14px" }}/>
           </div>
@@ -115,7 +160,7 @@ const ManageBoard = () => {
           <div style={{ minWidth: "200px", maxWidth: "200px", backgroundColor: bgcolor, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "8px", cursor: "pointer", height: "fit-content", padding:"5px" }}onClick={() => setNewListInput(true)} >
             {newListInput ? (
               <Form.Control type="text" value={newListName} onChange={(e) => setNewListName(e.target.value)} onKeyDown={(e) => {
-                if (e.key === "Enter") handleAddList();
+                if (e.key === "Enter") handleAddList(e);
                 }}
                 placeholder="Enter List Name" size="sm" style={{ fontSize: "14px", width: "90%", height: "fit-content", }} />
                 ) : ( <h5>+ Add List</h5>
@@ -128,3 +173,6 @@ const ManageBoard = () => {
 };
 
 export default ManageBoard;
+
+
+
