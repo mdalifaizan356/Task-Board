@@ -46,11 +46,6 @@ exports.showList =  async (req, res) => {
     const { boardId } = req.params;
     const list = await listModel.find({ boardId }).populate("taskId");
 
-    if (list.length === 0) {
-      return res.status(404).json({ message: "No list found" });
-    }
-    console.log(list);
-
     res.status(200).json({
       message: "list fetched successfully",
       list,

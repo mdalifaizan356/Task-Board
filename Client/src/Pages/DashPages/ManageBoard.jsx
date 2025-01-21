@@ -28,7 +28,7 @@ const ManageBoard = () => {
     try {
       if (!boardId) return;
       const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
-      console.log(response.data.list);
+      // console.log(response.data.list); 
       if (response.data.list) {
         setLists(response.data.list);
       } else {
@@ -149,20 +149,19 @@ e.preventDefault();
     setLists([...lists]);
   
     try {
-      // Make API call to update the database
-      await axios.post(`http://localhost:6080/newTask/moveTask`, {
+      const response = await axios.post(`http://localhost:6080/newTask/moveTask`, {
         taskId: movedTask._id,
         sourceListId: source.droppableId,
         destinationListId: destination.droppableId,
         destinationIndex: destination.index,
       });
-      if (response.status === 201) {
+      if (response.status === 200) {
         await fetchListData();
       }
     } catch (error) {
       console.error("Error moving task:", error);
       alert("Failed to move the task.");
-      fetchListData(); // Re-fetch lists to ensure consistency
+      fetchListData(); 
     }
   };
   

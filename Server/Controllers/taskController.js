@@ -2,6 +2,8 @@
  const mongoose = require("mongoose");
  const listModel = require("../Models/listModel");
  const taskModel = require("../Models/taskModel");
+//  const { ObjectId } = require('mongodb');
+
   
 // Create Task and Update List
 exports.createTask = async (req, res) => {
@@ -27,54 +29,36 @@ exports.createTask = async (req, res) => {
 };
 
 
-// // Move Task
-// exports.moveTask = async (req, res) => {
-//     try {
-//       const { taskId, sourceListId, destinationListId } = req.body;
-//       console.log (taskId, sourceListId, destinationListId )
-
-//       const updatelistId = await taskModel.findByIdAndUpdate(
-//         taskId,
-//         { $set: { listId: destinationListId } },
-//       );
-//       res.status(201).json({
-//         message: 'Task moved successfully and added to the list',
-//         task: updatelistId,
-//       });
-//     } catch (error) {
-//       console.error('Error creating task:', error);
-//       res.status(500).json({ message: 'Server error', error });
-//     }
-// };
-
-
-
+// Move Task
 exports.moveTask = async (req, res) => {
-  try {
-    const { taskId, sourceListId, destinationListId } = req.body;
+    try {
+      const { taskId, sourceListId, destinationListId } = req.body;
+      console.log (taskId, sourceListId, destinationListId );
+      if (!mongoose.Types.ObjectId.isValid(taskId) || !mongoose.Types.ObjectId.isValid(destinationListId)) {
+              return res.status(400).json({ message: 'Invalid taskId or destinationListId!' });
+      }
+      const updatelistId = await taskModel.findByIdAndUpdate(
+        taskId,
+        { $set: { listId: destinationListId } },
+      );
 
-    // Logging for debugging
-    console.log('Task ID:', taskId, 'Source List ID:', sourceListId, 'Destination List ID:', destinationListId);
+        await listModel.findByIdAndUpdate(
+          sourceListId,
+          { $pull: { taskId: taskId } }
+        );
 
-    // Task ko update karo listId ke saath
-    const updatedTask = await taskModel.findByIdAndUpdate(
-      taskId,
-      { $set: { listId: destinationListId } }, // Nayi list ke ID ke saath update
-      { new: true } // Updated task ka document return kare
-    );
+        await listModel.findByIdAndUpdate(
+          destinationListId,
+          { $addToSet: { taskId: taskId } }
+        );
 
-    // Agar task nahi mila
-    if (!updatedTask) {
-      return res.status(404).json({ message: 'Task not found!' });
+      res.status(201).json({
+        message: 'Task moved successfully and added to the list',
+        task: updatelistId,
+      });
     }
-
-    res.status(200).json({
-      message: 'Task moved successfully!',
-      task: updatedTask, // Updated task ki details frontend ko bheje
-    });
-  } catch (error) {
-    console.error('Error moving task:', error);
-    res.status(500).json({ message: 'Server error while moving task', error });
-  }
+    catch (error) {
+      console.error('Error creating task:', error);
+      res.status(500).json({ message: 'Server error', error });
+    }
 };
-

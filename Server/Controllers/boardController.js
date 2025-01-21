@@ -38,11 +38,6 @@ exports.showBoard =  async (req, res) => {
   try {
     const { userId } = req.params;
     const boards = await boardModel.find({ userId });
-
-    if (boards.length === 0) {
-      return res.status(404).json({ message: "No boards found" });
-    }
-
     res.status(200).json({
       message: "Boards fetched successfully",
       boards,
@@ -52,14 +47,3 @@ exports.showBoard =  async (req, res) => {
     res.status(500).json({message: "Server error", error });
   }
 };
-
-// Delete Board
-//   exports.deleteBoard = async (req, res) => {
-//   const { userId, boardId } = req.params;
-//   try {
-//     const result = await oardModel.deleteOne({ userId, boardId });
-//     res.status(200).send({ message: 'Board deleted successfully!' });
-//   } catch (error) {
-//     res.status(500).send({ error: 'Failed to delete board.' });
-//   }
-// };
