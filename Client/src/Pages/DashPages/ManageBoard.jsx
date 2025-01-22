@@ -4,6 +4,9 @@ import { Button, Container, Col, Navbar, Nav, Offcanvas, Modal, Form } from "rea
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { FaCheck } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { FaPen } from "react-icons/fa";
 
 const ManageBoard = () => {
   const [lists, setLists] = useState([]);
@@ -28,7 +31,7 @@ const ManageBoard = () => {
     try {
       if (!boardId) return;
       const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
-      // console.log(response.data.list); 
+      console.log(response.data.list);
       if (response.data.list) {
         setLists(response.data.list);
       } else {
@@ -101,10 +104,9 @@ e.preventDefault();
   }, [boardId]);
 
 
-
   const handleOnDragEnd = async (result) => {
     const { source, destination } = result;
-  
+
     // If dropped outside a list or same position, do nothing
     if (!destination || (source.droppableId === destination.droppableId && source.index === destination.index)) {
       return;
@@ -164,6 +166,10 @@ e.preventDefault();
       fetchListData(); 
     }
   };
+
+  const completeTask = (completeTaskId, listIdCompleteTask )=>{
+    console.log(completeTaskId, listIdCompleteTask);
+  }
   
   return (
   <>
@@ -201,15 +207,25 @@ e.preventDefault();
                         {...provided.dragHandleProps}
                         style={{
                           ...provided.draggableProps.style,
-                          padding: "10px",
+                          padding: "5px",
                           margin: "5px 0",
                           background: "#ffffff",
                           border: "1px solid #ccc",
                           borderRadius: "4px",
                           boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+                          display:"flex",
+                          justifyContent:"space-between"
                         }}
                       >
-                        {task.taskName}
+                      <div style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+                        <p className="p-0 m-0" >{task.taskName}</p>
+                      </div>
+                      <div style={{display:"flex", justifyContent:"flex-end", alignItems:"start"}}>
+                      <Button variant="" className="p-0 m-0"><FaCheck  style={{color:"green"}} onClick={() => completeTask(task._id, task.listId)}/></Button>
+                      <Button variant="" className="p-0 m-0"><FaPen style={{color:"blue"}} /></Button>
+                      <Button variant="" className="p-0 m-0"><MdDelete style={{color:"red"}} /></Button>
+                      <Button variant="" className="p-0 m-0">&#x2022;&#x2022;&#x2022; </Button>
+                      </div>
                       </div>
                     )}
                   </Draggable>
@@ -242,3 +258,5 @@ e.preventDefault();
 };
 
 export default ManageBoard;
+
+

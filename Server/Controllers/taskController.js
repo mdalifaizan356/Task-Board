@@ -40,19 +40,22 @@ exports.moveTask = async (req, res) => {
       const updatelistId = await taskModel.findByIdAndUpdate(
         taskId,
         { $set: { listId: destinationListId } },
+        { new: true }
       );
 
         await listModel.findByIdAndUpdate(
           sourceListId,
-          { $pull: { taskId: taskId } }
+          { $pull: { taskId: taskId } },
+          { new: true }
         );
 
         await listModel.findByIdAndUpdate(
           destinationListId,
-          { $addToSet: { taskId: taskId } }
+          { $addToSet: { taskId: taskId } },
+          { new: true }
         );
 
-      res.status(201).json({
+      res.status(200).json({
         message: 'Task moved successfully and added to the list',
         task: updatelistId,
       });
@@ -61,4 +64,12 @@ exports.moveTask = async (req, res) => {
       console.error('Error creating task:', error);
       res.status(500).json({ message: 'Server error', error });
     }
+};
+
+
+
+
+//Delete Task
+exports.deleteTask = async (req, res) => {
+  console.log(req.body);
 };
