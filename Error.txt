@@ -6,3 +6,6 @@ solution: first check all index on collection
                                                                 db.boards.getIndexes(); 
             Remove index                               db.boards.dropIndex("boardName_1");
 
+
+
+http method delete me body data:{} me send ki jati he.

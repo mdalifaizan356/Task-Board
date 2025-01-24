@@ -11,11 +11,18 @@ const cors = require("cors");
 const app = express();
 
 const port = process.env.PORT;
+const HOST = '0.0.0.0';
 const mongo_url = process.env.MONGO_URL;
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cors());
+app.use(
+    cors({
+      origin: "http://192.168.93.63:5173",
+      methods: "GET,POST,PUT,PATCH,DELETE",
+      credentials: true, // Optional: If you're using cookies
+    })
+  );
 app.use(fileUpload());
 app.use("/newuser", userRoute);
 app.use("/newboard", boardRoute);
@@ -32,6 +39,6 @@ mongoose.connect(mongo_url)
     console.log("Error with mongoDB connection",e);
 })
 
-app.listen(port, ()=>{
+app.listen(port, HOST,  ()=>{
     console.log(`Server is runnig on Port Number ${port}`);
 })

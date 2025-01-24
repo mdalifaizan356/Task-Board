@@ -15,6 +15,9 @@ const SignIn = () => {
     const { name } = useSelector((state) => state.user);
   const popupState = useSelector((state) => state.popup);
 
+  const backendURL = `http://${window.location.hostname}:6080/newuser/loginUser`;
+
+
 
   const [formData, setFormData] = useState({
     Email: "",
@@ -29,7 +32,8 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:6080/newuser/loginUser", formData);
+      // const response = await axios.post(`http://${window.location.hostname}:6080/newuser/loginUser`, formData);
+      const response = await axios.post(backendURL, formData);
       if (response.status === 200) {
         const { token, databaseEmail } = response.data;
 
@@ -64,9 +68,8 @@ const SignIn = () => {
 
   return (
     <>
-    <HomeHeader/>
-    <Container style={{ maxWidth: "500px", marginTop: "10%" }}>
-      <h1 className="text-center mb-4">Sign In</h1>
+    <Container style={{ maxWidth: "500px", marginTop: "150px", height:"100vh" }}>
+      <h1 className="text-center mb-2">Log In</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formEmail">
           <Form.Label>Email address</Form.Label>

@@ -23,7 +23,7 @@ const ShowBoard = () => {
     try {
       if (!userId) return;
       const response = await axios.get(
-        `http://localhost:6080/newboard/showBoard/${userId}`
+        `http://${window.location.hostname}:6080/newboard/showBoard/${userId}`
       );
       if (response.data.boards) {
         setBoardData(response.data.boards);
@@ -49,7 +49,7 @@ const ShowBoard = () => {
     };
 
     try {
-      const response = await axios.post(`http://localhost:6080/newboard/createBoard/${userId}`,
+      const response = await axios.post(`http://${window.location.hostname}:6080/newboard/createBoard/${userId}`,
       newBoardData
     );
       if (response.status === 200) {

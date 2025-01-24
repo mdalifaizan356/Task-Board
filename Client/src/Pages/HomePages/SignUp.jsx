@@ -74,9 +74,9 @@ const SignUp = () => {
 
   return (
     <>
-    <HomeHeader/>
-    <Container style={{ maxWidth: "500px", marginTop: "56px", }}>
-      <h1 className="text-center mb-4">Sign Up</h1>
+    {/* <HomeHeader/> */}
+    <Container style={{ maxWidth: "500px", marginTop: "150px", height:"100vh" }}>
+      <h1 className="text-center mb-2">Sign Up</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formName">
           <Form.Label>Full Name</Form.Label>

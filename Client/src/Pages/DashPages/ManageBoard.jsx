@@ -30,7 +30,7 @@ const ManageBoard = () => {
   const fetchListData = async () => { 
     try {
       if (!boardId) return;
-      const response = await axios.get(`http://localhost:6080/newlist/showList/${boardId}`);
+      const response = await axios.get(`http://${window.location.hostname}:6080/newlist/showList/${boardId}`);
       console.log(response.data.list);
       if (response.data.list) {
         setLists(response.data.list);
@@ -48,7 +48,6 @@ const ManageBoard = () => {
   const handleAddList = async(e) => {
     e.preventDefault();
     console.log(newListName);
-    // e.preventDefault();
     if (newListName.trim() === ""){
       alert("Please provide Name and Color for the board.");
       return;
@@ -58,7 +57,7 @@ const ManageBoard = () => {
       listColor: bgcolor,
     }
     try {
-      const response = await axios.post(`http://localhost:6080/newList/createList/${boardId}`,
+      const response = await axios.post(`http://${window.location.hostname}:6080/newList/createList/${boardId}`,
         listData
     );
       if (response.status === 200) {
@@ -82,7 +81,7 @@ e.preventDefault();
     taskName
   }
   try {
-    const response = await axios.post(`http://localhost:6080/newTask/createTask`,
+    const response = await axios.post(`http://${window.location.hostname}:6080/newTask/createTask`,
       taskData
   );
     if (response.status === 201) {
@@ -151,7 +150,7 @@ e.preventDefault();
     setLists([...lists]);
   
     try {
-      const response = await axios.post(`http://localhost:6080/newTask/moveTask`, {
+      const response = await axios.post(`http://${window.location.hostname}:6080/newTask/moveTask`, {
         taskId: movedTask._id,
         sourceListId: source.droppableId,
         destinationListId: destination.droppableId,
@@ -167,8 +166,43 @@ e.preventDefault();
     }
   };
 
-  const completeTask = (completeTaskId, listIdCompleteTask )=>{
-    console.log(completeTaskId, listIdCompleteTask);
+  const deleteTask = async(deleteTaskId, listIdDeleteTask )=>{
+    try{
+      const response = await axios.delete(`http://${window.location.hostname}:6080/newTask/deleteTask`, {
+        data:{
+          deleteTaskId,
+          listIdDeleteTask
+        }
+      });
+      if (response.status === 200) {
+        await fetchListData();
+      }
+    }
+    catch(error){
+      console.error("Error moving task:", error);
+      alert("Failed to move the task.");
+      fetchListData(); 
+    }
+  }
+
+  const completeTask = async(completeTaskId, listIdCompleteTask, taskCompleteStatus )=>{
+    try{
+      const response = await axios.patch(`http://${window.location.hostname}:6080/newTask/completeTask`, {
+          completeTaskId,
+          listIdCompleteTask,
+          taskCompleteStatus
+      });
+      
+      if (response.status === 200) {
+        // console.log(response.data.isComplete);
+        await fetchListData()
+      }
+    }
+    catch(error){
+      console.error("Error moving task:", error);
+      alert("Failed to move the task.");
+      fetchListData(); 
+    }
   }
   
   return (
@@ -209,7 +243,7 @@ e.preventDefault();
                           ...provided.draggableProps.style,
                           padding: "5px",
                           margin: "5px 0",
-                          background: "#ffffff",
+                          background:  task.isComplete ? 'orange' : 'white',
                           border: "1px solid #ccc",
                           borderRadius: "4px",
                           boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
@@ -218,23 +252,34 @@ e.preventDefault();
                         }}
                       >
                       <div style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                        <p className="p-0 m-0" >{task.taskName}</p>
+                        <p className="p-0 m-0" style={{textDecoration: task.isComplete ? "line-through" : "none",}} >{task.taskName}</p>
                       </div>
                       <div style={{display:"flex", justifyContent:"flex-end", alignItems:"start"}}>
-                      <Button variant="" className="p-0 m-0"><FaCheck  style={{color:"green"}} onClick={() => completeTask(task._id, task.listId)}/></Button>
+                      <Button variant="" className="p-0 m-0"><FaCheck  style={{color:"green"}} onClick={() => completeTask(task._id, task.listId, task.isComplete)}/></Button>
                       <Button variant="" className="p-0 m-0"><FaPen style={{color:"blue"}} /></Button>
-                      <Button variant="" className="p-0 m-0"><MdDelete style={{color:"red"}} /></Button>
+                      <Button variant="" className="p-0 m-0"><MdDelete  style={{color:"red"}} onClick={() => deleteTask(task._id, task.listId)}/></Button>
                       <Button variant="" className="p-0 m-0">&#x2022;&#x2022;&#x2022; </Button>
                       </div>
                       </div>
                     )}
                   </Draggable>
                 ))}
-                <Form.Control type="text" value={taskInputs[list._id] || ""} onChange={(e) => setTaskInputs({ ...taskInputs, [list._id]: e.target.value })}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAddTask(e, list._id, taskInputs[list._id]);
-                  }}
-                placeholder="Add a task..." size="sm" style={{ fontSize: "14px" }}/>
+                <form
+                onSubmit={(e) => {
+                e.preventDefault();
+                handleAddTask(e, list._id, taskInputs[list._id]);
+                }}>
+                <Form.Control
+                  type="text"
+                  value={taskInputs[list._id] || ""}
+                  onChange={(e) =>
+                    setTaskInputs({ ...taskInputs, [list._id]: e.target.value })
+                  }
+                  placeholder="Add a task..."
+                  size="sm"
+                  style={{ fontSize: "14px" }}
+                />
+              </form>
                 {provided.placeholder}
               </div>
             )}
@@ -258,5 +303,4 @@ e.preventDefault();
 };
 
 export default ManageBoard;
-
 

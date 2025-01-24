@@ -21,21 +21,7 @@ const HomeFooter = () => {
   }
   return (
     <>
-  
-            <Container fluid className='mt-5' style={{background:"#182c4e", color:"white", height:"50vh"}}>
-              <Row>
-                <Col>
-                <Link>About Us</Link>
-                </Col>
-                <Col>
-                  <h6>TaskBoard</h6>
-                </Col>
-                <Col>
-                  <h6>TaskBoard</h6>
-                </Col>
-                <hr />
-              </Row>
-        
+            <Container fluid className='mt-5' style={{background:"#182c4e", color:"white"}}>
               <Row>
                 <Col className='d-flex justify-content-center '>
                   <p style={{fontSize:"15px"}}>Copyright © 2025 DevPasha</p>

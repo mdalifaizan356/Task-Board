@@ -7,6 +7,7 @@ const userAuth = require("../Middlewares/userAuth")
 router.post("/createTask", taskController.createTask);
 router.post("/moveTask", taskController.moveTask);
 router.delete("/deleteTask", taskController.deleteTask);
+router.patch("/completeTask", taskController.completeTask);
 
 
 
