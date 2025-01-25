@@ -13,7 +13,7 @@ const DashLayout = () => {
     <>
     <DashHeader />
     <Row>
-      <Col style={{marginTop:"50px"}}>
+      <Col>
         <main>
           <Outlet /> {/* Page content is here */}
         </main>

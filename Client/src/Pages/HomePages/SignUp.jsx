@@ -42,7 +42,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:6080/newuser/otpVarification", { Email: formData.Email });
+      const response = await axios.post(`http://${window.location.hostname}:6080/newuser/otpVarification`, { Email: formData.Email });
 
       if (response.status === 200) {
         alert("OTP Sent!");
@@ -58,7 +58,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.put("http://localhost:6080/newuser/createUser/", formData);
+      const response = await axios.put(`http://${window.location.hostname}:6080/newuser/createUser/`, formData);
 
       if (response.status === 200) {
         alert("SignUp Successful!");

@@ -11,7 +11,7 @@ const EditProfile = () => {
       <Container>
       <Row>
         <Col className="mt-5 d-flex justify-content-center">
-          <Form className="mt-5 w-25 p-3">
+          <Form className="w-100 p-0">
             <h4 className="text-center">Edit Profile</h4>
             <Form.Group className="mb-3 text-center">
               <div

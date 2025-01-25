@@ -55,3 +55,23 @@ exports.showList =  async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+
+//Delete List With Corresponding Task
+exports.deleteList = async(req, res)=>{
+  const{deleteListId} = req.body;
+  // console.log(deleteListId);
+  try{
+       const list =  await listModel.findByIdAndDelete(deleteListId);
+        const taskId = list.taskId;
+        console.log("taskId",taskId);
+
+        await taskModel.deleteMany({ _id: { $in: taskId } });
+        res.status(200).json({
+          message: "list delete successfully",
+        });
+} catch (error) {
+  console.error("Error fetching boards:", error);
+  res.status(500).json({ message: "Server error", error });
+}
+};

@@ -44,10 +44,10 @@ const ChangePass = () => {
       <Container>
       <Row className="mt-5 d-flex justify-content-center">
         <Col className="mt-5 d-flex justify-content-center" >
-          <Form className="mt-5 w-25   p-3" onSubmit={handleSubmit}>
+          <Form className=" mb-5 w-50" onSubmit={handleSubmit}>
             <h4 className="text-center">Change Password</h4>
 
-        <Form.Group className="mb-3" controlId="formOldPass">
+        <Form.Group className="mt-5 mb-3" controlId="formOldPass">
           <Form.Label>Old Password</Form.Label>
           <Form.Control
             type="password"
@@ -70,7 +70,7 @@ const ChangePass = () => {
             required
           />
         </Form.Group>
-            <Button variant="primary" type="submit" className="w-100 mb-2">Change Password</Button>
+            <Button variant="primary" type="submit" className="w-100 mb-2">Change</Button>
         <Button as={Link} to="/userdashboard" variant="danger" className="w-100">Cancel</Button>
           </Form>
         </Col>

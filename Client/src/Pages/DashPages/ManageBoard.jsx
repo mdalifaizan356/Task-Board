@@ -61,7 +61,6 @@ const ManageBoard = () => {
         listData
     );
       if (response.status === 200) {
-        alert("List Created Successfully!");
         setNewListInput(false);
         setNewListName("");
         await fetchListData();
@@ -71,6 +70,27 @@ const ManageBoard = () => {
       alert("Failed to create board. Please try again.");
     }
   };
+
+
+//Delete List 
+const deleteList = async(deleteListId )=>{
+  console.log(deleteListId)
+  try{
+    const response = await axios.delete(`http://${window.location.hostname}:6080/newList/deleteList`, {
+      data:{
+        deleteListId
+      }
+    });
+    if (response.status === 200) {
+      await fetchListData();
+    }
+  }
+  catch(error){
+    console.error("Error moving task:", error);
+    alert("Failed to move the task.");
+    fetchListData(); 
+  }
+}
 
 // Add new task
 const handleAddTask = async(e, listId, taskName) => {
@@ -85,7 +105,6 @@ e.preventDefault();
       taskData
   );
     if (response.status === 201) {
-      alert("task Created Successfully!");
       setTaskInputs({});
       await fetchListData();
     }
@@ -207,12 +226,12 @@ e.preventDefault();
   
   return (
   <>
-    <Navbar variant="dark" expand={false} className="py-1" style={{ height: "40px", fontSize: "14px", display: "flex", alignItems: "center", justifyContent: "end", backgroundColor: bgcolor, }} >
+    <Navbar fluid variant="dark" expand={false} className="p-0" style={{ height: "40px", fontSize: "14px", display: "flex", alignItems: "center", justifyContent: "end", backgroundColor: bgcolor, }} >
       <h5>{boardData.boardName}</h5>
       <Button className="navbar-toggler" onClick={handleOffcanvasShow} aria-label="Toggle navigation" style={{ background: "transparent", border: "none", fontSize: "20px", color: "white", marginRight: "10px", display: "flex", alignItems: "center" }}>&#x2022;&#x2022;&#x2022; </Button>
-      <Navbar.Offcanvas id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" placement="end" show={showOffcanvas} onHide={handleOffcanvasClose} style={{ marginTop: "95px", backgroundColor: bgcolor, width:"20%" }} >
+      <Navbar.Offcanvas id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" placement="end" show={showOffcanvas} onHide={handleOffcanvasClose} style={{ marginTop: "0%", backgroundColor: bgcolor, width:"70%", fontSize: "25px" }} >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title id="offcanvasNavbarLabel">Board Menu</Offcanvas.Title>
+          {/* <Offcanvas.Title id="offcanvasNavbarLabel">Board Menu</Offcanvas.Title> */}
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Nav className="flex-column text-center">
@@ -225,13 +244,16 @@ e.preventDefault();
     </Navbar>
 
     <DragDropContext onDragEnd={handleOnDragEnd}>
-    <Container fluid className="mt-3">
+    <Container fluid className="mt-0">
       <div style={{ display: "flex", padding: "10px", gap: "10px", overflowX: "auto", scrollbarWidth: "none" }}>
         {lists.map((list) => (
           <Droppable droppableId={list._id} key={list}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps} style={{ minWidth: "300px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
-                <h4>{list.listName}</h4>
+                <div className="d-flex justify-content-between align-items-center">
+                <h5>{list.listName}</h5>
+                <Button variant="" className="p-0 m-0"><MdDelete  style={{color:"red", fontSize:"30px"}} onClick={() => deleteList(list._id)}/></Button>
+                </div>
                 {list.taskId.map((task, index) => (
                   <Draggable key={task._id} draggableId={task._id} index={index}>
                     {(provided) => (
@@ -297,7 +319,6 @@ e.preventDefault();
       </div>
           </Container>
     </DragDropContext>
-    
     </>
   );
 };

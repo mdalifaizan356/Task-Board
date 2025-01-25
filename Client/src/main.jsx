@@ -9,9 +9,9 @@ import Store from "./Redux/Store/Store.js"
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
   <Provider store={Store}>
-    <UserContextProvider>
+    {/* <UserContextProvider> */}
     <App />
-  </UserContextProvider>
+  {/* </UserContextProvider> */}
   </Provider>
   // </StrictMode>,
 )

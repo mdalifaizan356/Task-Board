@@ -69,7 +69,7 @@ exports.moveTask = async (req, res) => {
 
 
 
-//Delete Task
+//Delete Task (cascading delete)
 exports.deleteTask = async (req, res) => {
   try{
     const{ deleteTaskId, listIdDeleteTask} = req.body;

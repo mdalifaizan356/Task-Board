@@ -55,7 +55,7 @@ const UserHeader = () => {
 
   return (
     <>
-    <Container fluid className='p-0 position-fixed top-0' style={{zIndex:"999"}}>
+    <Container fluid className='p-0' style={{zIndex:"999", width:"100%"}}>
     <Row>
             <Col>
             <Navbar bg="dark" variant="dark" expand={false} sticky="top">
@@ -66,7 +66,7 @@ const UserHeader = () => {
               placement="start"
               show={show}
               onHide={handleClose}
-              style={{marginTop:"50px"}}
+              style={{marginTop:"0%", width:"70%", fontSize: "20px"}}  
             >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title id="offcanvasNavbarLabel">Menu</Offcanvas.Title>
