@@ -12,6 +12,9 @@ const ManageBoard = () => {
   const [lists, setLists] = useState([]);
   const [newListInput, setNewListInput] = useState(false);
   const [newListName, setNewListName] = useState(""); 
+
+  const [listMenuVisibility, setListMenuVisibility] = useState({});
+  const [taskMenuVisibility, setTaskMenuVisibility] = useState({});
   
   const [taskInputs, setTaskInputs] = useState({});
 
@@ -25,6 +28,20 @@ const ManageBoard = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
     const handleOffcanvasClose = () => setShowOffcanvas(false);
     const handleOffcanvasShow = () => setShowOffcanvas(true);
+
+    const toggleListMenuVisibility = (listId) => {
+      setListMenuVisibility((prev) => ({
+        ...prev,
+        [listId]: !prev[listId],
+      }));
+    };
+
+    const toggleTaskMenuVisibility = (taskId) => {
+      setTaskMenuVisibility((prev) => ({
+        ...prev,
+        [taskId]: !prev[taskId],
+      }));
+    };
 
   //Fetch List With TAsk
   const fetchListData = async () => { 
@@ -252,7 +269,16 @@ e.preventDefault();
               <div ref={provided.innerRef} {...provided.droppableProps} style={{ minWidth: "300px", maxWidth: "200px", borderRadius: "8px", backgroundColor: bgcolor, boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)", padding: "10px", position: "relative", height: "fit-content",}}>
                 <div className="d-flex justify-content-between align-items-center">
                 <h5>{list.listName}</h5>
-                <Button variant="" className="p-0 m-0"><MdDelete  style={{color:"red", fontSize:"30px"}} onClick={() => deleteList(list._id)}/></Button>
+                <Button variant="" className="p-0 m-0" onClick={() => toggleListMenuVisibility(list._id)}>&#x2022;&#x2022;&#x2022;</Button>
+                {listMenuVisibility[list._id] && (
+                  <div style={{position: "absolute", top: "10px", right: "35px", background: "#fff", boxShadow: "0px 4px 6px rgba(0,0,0,0.1)", borderRadius: "4px", zIndex: 20, width: "150px", textAlign:"center"}} >
+                    <ul style={{ listStyle: "none", margin: "0", padding: "10px" }}>
+                    <li style={{ marginBottom: "10px" }}>
+                    <Button variant="" className="p-0 m-0"><MdDelete  style={{color:"red", fontSize:"30px"}} onClick={() => deleteList(list._id)}/>Delete List</Button>
+                    </li>
+                  </ul>
+                </div>
+                )}
                 </div>
                 {list.taskId.map((task, index) => (
                   <Draggable key={task._id} draggableId={task._id} index={index}>
@@ -278,9 +304,22 @@ e.preventDefault();
                       </div>
                       <div style={{display:"flex", justifyContent:"flex-end", alignItems:"start"}}>
                       <Button variant="" className="p-0 m-0"><FaCheck  style={{color:"green"}} onClick={() => completeTask(task._id, task.listId, task.isComplete)}/></Button>
-                      <Button variant="" className="p-0 m-0"><FaPen style={{color:"blue"}} /></Button>
+                      {/* <Button variant="" className="p-0 m-0"><FaPen style={{color:"blue"}} /></Button> */}
                       <Button variant="" className="p-0 m-0"><MdDelete  style={{color:"red"}} onClick={() => deleteTask(task._id, task.listId)}/></Button>
-                      <Button variant="" className="p-0 m-0">&#x2022;&#x2022;&#x2022; </Button>
+                      <Button variant="" className="p-0 m-0" onClick={() => toggleTaskMenuVisibility(task._id)}>&#x2022;&#x2022;&#x2022;</Button>
+                        {taskMenuVisibility[task._id] && (
+                          <div style={{position: "absolute", top: "50px", right: "39px", background: "white", boxShadow: "0px 4px 6px rgba(0,0,0,0.1)", borderRadius: "4px", zIndex: 10, width: "80%", textAlign:"center"}} >
+                          <p>{task.taskName}</p>
+                            <ul style={{ listStyle: "none", margin: "0", padding: "10px" }}>
+                              <li style={{ marginBottom: "10px" }}>
+                                <Button variant="" className="p-0 m-0" onClick={() => deleteList(list._id)}>Add Due Date</Button>
+                              </li>
+                              <li style={{ marginBottom: "10px" }}>
+                                <Button variant="" className="p-0 m-0" onClick={() => deleteList(list._id)}>Add Deadline</Button>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
                       </div>
                       </div>
                     )}
