@@ -1,0 +1,47 @@
+MongoDB schema me agar kisi field par unique: true define kiya gaya ho, to MongoDB us field par unique index create karta hai.
+Iska matlab yeh hai ki us particular field ke values ek document ke andar repeat nahi ho sakte. Agar duplicate value insert karne ki koshish hoti hai,
+to database error dega (e.g., E11000 duplicate key error).
+
+solution: first check all index on collection
+                                                                db.boards.getIndexes(); 
+            Remove index                               db.boards.dropIndex("boardName_1");
+
+
+
+http method delete me body data:{} me send ki jati he.
+
+
+
+state kisi bhi type ki ho skti he. like string, number, array, object, ya even a nested object.
+State update karte waqt pura object replace hota hai, isiliye spread operator (...prevObject) use karna zaroori hai.
+Agar aap sirf ek property update karna chahte hain aur pura object overwrite ho jaye, toh bina spread operator ke bhi likh sakte hain, par fir purani values chali jayengi.
+
+
+Agar MongoDB me collection mojud he. or bina schema banaye us collection pr crud lagana ho to bhi laga sakte kuch is tarah ka syntax likh kr.
+const Sales = mongoose.model("sales", new mongoose.Schema({}, { strict: false }));
+
+axiosInstance.interceptors
+Request Interceptor → Request bhejne se pehle modify karna (e.g., token add karna).
+Response Interceptor → Response aane ke baad modify karna (e.g., error handling, auto logout, retry request).
+
+
+
+Questions
+mongo me objectId data save karne baad create hoti he ya usse pehle.
+MongoDB ka ObjectId document insert hone se pehle hi generate ho jata hai, na ke insert hone ke baad.
+
+
+
+create axios instance.
+const axiosInstance = axios.create({
+    baseURL: "http://localhost:5001/api",
+    withCredentials: true,
+    headers: {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json",
+    },
+});
+
+
+
+Redux:

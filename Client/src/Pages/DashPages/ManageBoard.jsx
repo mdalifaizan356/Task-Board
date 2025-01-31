@@ -6,7 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { FaPen } from "react-icons/fa";
+import { toast, Slide, Zoom, Flip, Bounce,  } from 'react-toastify';
+
+
 
 const ManageBoard = () => {
   const [lists, setLists] = useState([]);
@@ -15,7 +17,6 @@ const ManageBoard = () => {
 
   const [listMenuVisibility, setListMenuVisibility] = useState({});
   const [taskMenuVisibility, setTaskMenuVisibility] = useState({});
-  
   const [taskInputs, setTaskInputs] = useState({});
 
   const location = useLocation();
@@ -80,11 +81,12 @@ const ManageBoard = () => {
       if (response.status === 200) {
         setNewListInput(false);
         setNewListName("");
+        toast.success(`List Create ${listData.listName} Successfully `, {transition: Bounce});
         await fetchListData();
       }
     } catch (error) {
       console.error("Error creating board:", error);
-      alert("Failed to create board. Please try again.");
+      toast.error(`List ${listName} Create Successfully `, {transition: Bounce});
     }
   };
 
@@ -123,6 +125,7 @@ e.preventDefault();
   );
     if (response.status === 201) {
       setTaskInputs({});
+      toast.success(`Task  ${taskData.taskName} Create Successfully on at this time`, {transition: Bounce});
       await fetchListData();
     }
   } catch (error) {
@@ -225,12 +228,14 @@ e.preventDefault();
     try{
       const response = await axios.patch(`http://${window.location.hostname}:6080/newTask/completeTask`, {
           completeTaskId,
-          listIdCompleteTask,
+          listIdCompleteTask, 
           taskCompleteStatus
       });
       
       if (response.status === 200) {
         // console.log(response.data.isComplete);
+      toast.success(`Good Job`, {transition: Bounce});
+
         await fetchListData()
       }
     }

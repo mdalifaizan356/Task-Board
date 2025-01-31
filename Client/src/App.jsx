@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import { useSelector, useDispatch } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 
@@ -20,6 +20,7 @@ import ManageBoard from './Pages/DashPages/ManageBoard';
 
 
 function App() { 
+    const { name } = useSelector((state) => state.user);
   return (
     <BrowserRouter>
               <Routes>
@@ -31,7 +32,7 @@ function App() {
                   {/* <Route path="/recoverpass" element={<RecoverPass />} /> */}
                 </Route>
 
-                <Route path="/dashboard" element={<DashLayout />}>
+                <Route path="/dashboard" element={name?<DashLayout />:<SignIn/>}>
                   {/* <Route index element={<ShowBoard />} /> */}
                   <Route path="editprofile" element={<EditProfile />} /> 
                   <Route path="changepass" element={<ChangePass />} />

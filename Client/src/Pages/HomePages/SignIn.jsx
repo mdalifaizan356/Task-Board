@@ -1,24 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../Redux/Slices/UserSlice";
-import { show, hide } from "../../Redux/Slices/PopUpSlice";
 import { Form, Button, Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import TaskCompletedPopup from "../../Components/CommonComponents/PopUp";
-import HomeHeader from "../../Components/HomeComponents/HomeHeader";
+import { loginUser } from "../../lib/APIs/userAPI";
+import { toast, Slide, Zoom, Flip, Bounce,  } from 'react-toastify';
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-    const { name } = useSelector((state) => state.user);
-  const popupState = useSelector((state) => state.popup);
-
-  const backendURL = `http://${window.location.hostname}:6080/newuser/loginUser`;
-
-
-
+  const { name } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     Email: "",
     Password: "",
@@ -32,11 +24,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const response = await axios.post(`http://${window.location.hostname}:6080/newuser/loginUser`, formData);
-      const response = await axios.post(backendURL, formData);
-      if (response.status === 200) {
-        const { token, databaseEmail } = response.data;
-
+        const { token, databaseEmail } = await loginUser(formData)
         dispatch(setUser({
           email: databaseEmail.Email,
           name: databaseEmail.Name,
@@ -45,26 +33,17 @@ const SignIn = () => {
           createdDate: databaseEmail.createdAt,
           _id: databaseEmail._id,
         }));
-
         localStorage.setItem("Token", token);
-
-        dispatch(show("Login Successful! Welcome to the dashboard."));
-      }
-    } catch (error) {
+        navigate("/dashboard");
+        toast.success(`Login Successful! Welcome ${databaseEmail.Name}`, {transition: Bounce});
+    }
+    catch (error) {
       console.error("Error during Login:", error);
-      dispatch(show("Login Failed! Please check your credentials."));
+      toast.error("Login Failed! Please check your credentials.", {transition: Bounce});
+      navigate("/signin")
     }
   };
 
-  const handleClosePopup = () => {
-    dispatch(hide());
-    if(!name){
-      navigate("/")
-    }
-    else{
-      navigate("/dashboard")
-    }
-  };
 
   return (
     <>
@@ -96,13 +75,6 @@ const SignIn = () => {
         <Button variant="primary" type="submit" className="w-100 mb-2">Login</Button>
         <Button as={Link} to="/" variant="danger" className="w-100">Cancel</Button>
       </Form>
-      {popupState.showPopup && (
-        <TaskCompletedPopup
-          show={popupState.showPopup}
-          message={popupState.message}
-          onClose={handleClosePopup}
-        />
-      )}
     </Container>
     </>
   );

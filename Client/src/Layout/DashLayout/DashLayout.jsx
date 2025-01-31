@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet } from 'react-router-dom';
 // import { jwtDecode } from 'jwt-decode';
 import DashHeader from "../../Components/DashComponents/DashHeader";
-import DashSidebar from "../../Components/DashComponents/DashSidebar";
 
 
 const DashLayout = () => { 

@@ -12,7 +12,7 @@ const initialState = {
 
 const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState, 
   reducers: { 
     setUser(state, action) {
       const { email, name, phNo, role, _id, createdDate} = action.payload;

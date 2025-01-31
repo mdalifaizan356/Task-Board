@@ -12,15 +12,15 @@ import calculateFreeDaysLeft from "/src/Utilities/calculateFreeDaysLeft.js";
 const UserHeader = () => {
   const [show, setShow] = useState(false); 
   const navigate = useNavigate();
-  // const { user } = useContext(UserContext); // Accessing user data from context
+  // const { user } = useContext(UserContext);
   const dispatch = useDispatch();
   const { name } = useSelector((state) => state.user);
 
   const createdDate = useSelector((state) => state.user.createdDate);
-  if (!createdDate) return null; // No user logged in
+  if (!createdDate) return null; 
   const freeDaysLeft = calculateFreeDaysLeft(createdDate);
   
-  const handleClose = () => setShow(false);
+  const handleClose = () => setShow(false); 
   const handleShow = () => setShow(true);
 
   const handleLogout = () => {
@@ -34,11 +34,10 @@ const UserHeader = () => {
 
     if (token) {
       try {
-        const decoded = jwtDecode(token); // Decode token
-        const currentTime = Date.now(); // Current time in milliseconds
+        const decoded = jwtDecode(token);
+        const currentTime = Date.now();
 
-        if (decoded.exp * 1000 < currentTime) { // Check expiry
-          // Token is expired
+        if (decoded.exp * 1000 < currentTime) {
           localStorage.removeItem("Token");
           navigate("/signin");
         }
@@ -48,7 +47,6 @@ const UserHeader = () => {
         navigate("/signin");
       }
     } else {
-      // No token found
       navigate("/signin");
     }
   }, [navigate]);
