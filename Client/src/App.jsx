@@ -32,7 +32,8 @@ function App() {
                   {/* <Route path="/recoverpass" element={<RecoverPass />} /> */}
                 </Route>
 
-                <Route path="/dashboard" element={name?<DashLayout />:<SignIn/>}>
+                {/* <Route path="/dashboard" element={name?<DashLayout />:<SignIn/>}> */}
+                <Route path="/dashboard" element={<DashLayout />}>
                   {/* <Route index element={<ShowBoard />} /> */}
                   <Route path="editprofile" element={<EditProfile />} /> 
                   <Route path="changepass" element={<ChangePass />} />

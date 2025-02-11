@@ -14,7 +14,7 @@ const DashLayout = () => {
     <Row>
       <Col>
         <main>
-          <Outlet /> {/* Page content is here */}
+          <Outlet />
         </main>
       </Col>
     </Row>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 // import { UserContext } from "../ContextProvider/UserContextProvider";
 import { useSelector, useDispatch } from "react-redux";
-import { clearUser } from "../../Redux/Slices/UserSlice";
+import { clearUser, fetchUser} from "../../Redux/Slices/UserSlice";
 import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -25,9 +25,14 @@ const UserHeader = () => {
 
   const handleLogout = () => {
     dispatch(clearUser());
-    localStorage.removeItem("Token");
+    localStorage.removeItem("Token"); 
     navigate("/signin");
   };
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
 
   useEffect(() => {
     const token = localStorage.getItem("Token");

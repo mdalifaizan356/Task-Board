@@ -20,8 +20,8 @@ module.exports = async (req, res, next)=>{
         if(!decode){
             return res.status(401).json({message:"No token provided"})
         }
-        const user = await userModel.findById(decode.id);
-        // console.log(user);
+        const user = await userModel.findById(decode._id);
+        console.log(user); 
 
         if(!user){
             return res.status(401).json({message:"User Not Found"});
@@ -33,4 +33,9 @@ module.exports = async (req, res, next)=>{
         res.status(400).send("Invalid Token");
     }
 
-}
+};
+
+
+
+
+

@@ -18,9 +18,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(
     cors({
-      origin: "http://192.168.32.63:5173",
+      origin: "http://localhost:5173",
       methods: "GET,POST,PUT,PATCH,DELETE",
-      credentials: true, // Optional: If you're using cookies
+      credentials: true,
     })
   );
 app.use(fileUpload());

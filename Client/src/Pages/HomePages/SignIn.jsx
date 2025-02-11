@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../Redux/Slices/UserSlice";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Form, Button, Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../lib/APIs/userAPI";
 import { toast, Slide, Zoom, Flip, Bounce,  } from 'react-toastify';
+import axiosInstance from "../../lib/axios";
 
 const SignIn = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { name } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     Email: "",
     Password: "",
@@ -24,18 +22,13 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const { token, databaseEmail } = await loginUser(formData)
-        dispatch(setUser({
-          email: databaseEmail.Email,
-          name: databaseEmail.Name,
-          phone: databaseEmail.PhNo,
-          role: databaseEmail.Role,
-          createdDate: databaseEmail.createdAt,
-          _id: databaseEmail._id,
-        }));
-        localStorage.setItem("Token", token);
-        navigate("/dashboard");
-        toast.success(`Login Successful! Welcome ${databaseEmail.Name}`, {transition: Bounce});
+      const response = await axiosInstance.post("/newuser/loginUser", formData);
+        if (response.status === 200) {
+          const { token, databaseEmail } = await loginUser(formData)
+          localStorage.setItem("Token", token);
+          navigate("/dashboard");
+          toast.success(`Login Successful! Welcome ${databaseEmail.Name}`, {transition: Bounce});
+        }
     }
     catch (error) {
       console.error("Error during Login:", error);
@@ -43,7 +36,6 @@ const SignIn = () => {
       navigate("/signin")
     }
   };
-
 
   return (
     <>
@@ -74,6 +66,11 @@ const SignIn = () => {
         </Form.Group>
         <Button variant="primary" type="submit" className="w-100 mb-2">Login</Button>
         <Button as={Link} to="/" variant="danger" className="w-100">Cancel</Button>
+        <p className="text-center mt-3">
+                  <Link to="/signin" style={{ color: "blue", textDecoration: "underline" }}>
+                    Forget Password?
+                  </Link>
+                </p>
       </Form>
     </Container>
     </>
