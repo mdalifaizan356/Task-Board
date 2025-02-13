@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-// import { UserContext } from "../../ContextProvider/UserContextProvider";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import { UserContext } from "../../ContextProvider/UserContextProvider";
+// import axios from "axios";
+import axiosInstance from "../../lib/axios";
 import { Button, Form, Modal, Card, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,10 @@ const ShowBoard = () => {
   const [newBoard, setNewBoard] = useState({ name: "", color: "#E84711" });
   const [boardData, setBoardData] = useState([]);
 
-  const user = useSelector(state=>state.user)
-  // const { user } = useContext(UserContext);
-  const userId = user ? user.id : null;
-  // console.log(userId);
+  
+  const { user } = useContext(UserContext);
+  const userId = user ? user._id : null;
+  console.log(userId);
 
   const navigate = useNavigate();
 
@@ -22,9 +22,7 @@ const ShowBoard = () => {
   const fetchBoardData = async () => { 
     try {
       if (!userId) return;
-      const response = await axios.get(
-        `http://${window.location.hostname}:6080/newboard/showBoard/${userId}`
-      );
+      const response = await axiosInstance.get(`/newboard/showBoard/${userId}`);
       if (response.data.boards) {
         setBoardData(response.data.boards);
       } else {
@@ -49,7 +47,7 @@ const ShowBoard = () => {
     };
 
     try {
-      const response = await axios.post(`http://${window.location.hostname}:6080/newboard/createBoard/${userId}`,
+      const response = await axiosInstance.post(`/newboard/createBoard/${userId}`,
       newBoardData
     );
       if (response.status === 200) {

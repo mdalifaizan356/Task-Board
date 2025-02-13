@@ -11,5 +11,5 @@ router.patch("/changePassword", userController.changePassword);
 router.patch("/recoverpassword", userController.recoverPassword);
 router.patch("/editProfile", userController.editProfile);
 
-
+ 
 module.exports = router;

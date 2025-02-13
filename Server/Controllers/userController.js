@@ -82,39 +82,32 @@ exports.recoverPassword = async (req, res) => {
 // Login User
 exports.loginUser = async (req, res) => {
     const { Email, Password } = req.body
-    console.log(Email, Password);
-    const databaseEmail = await userModel.findOne({ Email })
-    console.log(databaseEmail);
-    if (!databaseEmail) {
+    const user = await userModel.findOne({ Email })
+    if (!user) {
         return res.status(400).json({ message: "please Signup" });
     }
-    const dataBasePassword = databaseEmail.Password;
+    const dataBasePassword = user.Password;
     const matchPassword = await bcrypt.compare(Password, dataBasePassword);
     if (!matchPassword) {
         return res.status(400).json({ message: "invalid credentials" });
     }
-    const token = jwt.sign({ id: databaseEmail._id }, secretKey, { expiresIn: "30m" });
-    return res.status(200).json({ token,databaseEmail, message: "user login successfully" });
+    const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: "30m" });
+    return res.status(200).json({ token,user, message: "user login successfully" });
 };
 
 
 // Fetch user
 exports.fetchUser = async (req, res) => {
     try {
-      const userId = req.user.id; 
-      console.log(userId);
-      const user = await userModel.findById(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-  
-      res.json(user);
+        const user = req.user;
+        res.json(user);
+        console.log(user);
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Server Error" });
     }
-  };
-  
+};
+
 
 // Change Psssword
 exports.changePassword = async (req, res) => {

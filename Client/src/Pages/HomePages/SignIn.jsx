@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useContext } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../lib/APIs/userAPI";
-import { toast, Slide, Zoom, Flip, Bounce,  } from 'react-toastify';
+import { toast, Bounce } from 'react-toastify';
 import axiosInstance from "../../lib/axios";
+import { UserContext } from "../../ContextProvider/UserContextProvider";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { fetchUser } = useContext(UserContext); 
   const [formData, setFormData] = useState({
     Email: "",
     Password: "",
@@ -23,23 +23,21 @@ const SignIn = () => {
     e.preventDefault();
     try {
       const response = await axiosInstance.post("/newuser/loginUser", formData);
-        if (response.status === 200) {
-          const { token, databaseEmail } = await loginUser(formData)
-          localStorage.setItem("Token", token);
-          navigate("/dashboard");
-          toast.success(`Login Successful! Welcome ${databaseEmail.Name}`, {transition: Bounce});
-        }
-    }
-    catch (error) {
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        localStorage.setItem("token", token);
+        await fetchUser();
+        toast.success(`Login Successful! Welcome ${user.Name}`, { transition: Bounce });
+        navigate("/dashboard");
+      }
+    } catch (error) {
       console.error("Error during Login:", error);
-      toast.error("Login Failed! Please check your credentials.", {transition: Bounce});
-      navigate("/signin")
+      toast.error("Login Failed! Please check your credentials.", { transition: Bounce });
     }
   };
 
   return (
-    <>
-    <Container style={{ maxWidth: "500px", marginTop: "150px", height:"100vh" }}>
+    <Container style={{ maxWidth: "500px", marginTop: "150px", height: "100vh" }}>
       <h1 className="text-center mb-2">Log In</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formEmail">
@@ -67,13 +65,12 @@ const SignIn = () => {
         <Button variant="primary" type="submit" className="w-100 mb-2">Login</Button>
         <Button as={Link} to="/" variant="danger" className="w-100">Cancel</Button>
         <p className="text-center mt-3">
-                  <Link to="/signin" style={{ color: "blue", textDecoration: "underline" }}>
-                    Forget Password?
-                  </Link>
-                </p>
+          <Link to="/signin" style={{ color: "blue", textDecoration: "underline" }}>
+            Forget Password?
+          </Link>
+        </p>
       </Form>
     </Container>
-    </>
   );
 };
 

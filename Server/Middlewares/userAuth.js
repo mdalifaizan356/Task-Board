@@ -1,41 +1,29 @@
 const jwt = require("jsonwebtoken");
-const secretKey = process.env.SECRETKEY;
 const userModel = require("../Models/userModel");
+const secretKey = process.env.SECRETKEY;
 
-
-module.exports = async (req, res, next)=>{
-    try{
-        // const token = req.headers;
+module.exports = async (req, res, next) => {
+    try {
         const token = req.headers?.authorization;
-        console.log(token);
-        if(!token){
-            return res.status(401).json({message:"No token provided"})
+        if (!token) {
+            return res.status(401).json({ message: "No token provided" });
         }
-        const splitToken = token.split(" ")[1]
-        // console.log(splitToken);
 
-        const decode = jwt.verify(splitToken, secretKey);
-        // console.log(decode);
+        const splitToken = token.split(" ")[1]; // Bearer token
+        const decoded = jwt.verify(splitToken, secretKey);
 
-        if(!decode){
-            return res.status(401).json({message:"No token provided"})
+        if (!decoded) {
+            return res.status(401).json({ message: "Invalid Token" });
         }
-        const user = await userModel.findById(decode._id);
-        console.log(user); 
 
-        if(!user){
-            return res.status(401).json({message:"User Not Found"});
+        const user = await userModel.findById(decoded.id).select("-password"); // Exclude password
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
         }
+
+        req.user = user; // Store user data in request
         next();
-
+    } catch (err) {
+        res.status(400).json({ message: "Invalid Token" });
     }
-    catch(err){
-        res.status(400).send("Invalid Token");
-    }
-
 };
-
-
-
-
-

@@ -1,13 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 
 import HomeLayout from './Layout/HomeLayout/HomeLayout';
 import SignUp from './Pages/HomePages/SignUp';
 import SignIn from './Pages/HomePages/SignIn';
-// import RecoverPass from './Pages/HomePages/RecoverPass';
 import ForgetPass from './Pages/HomePages/ForgetPass';
 import HomeContent from './Components/HomeComponents/HomeContent';
 import PNF from './Pages/HomePages/PNF';
@@ -20,7 +18,6 @@ import ManageBoard from './Pages/DashPages/ManageBoard';
 
 
 function App() { 
-    const { name } = useSelector((state) => state.user);
   return (
     <BrowserRouter>
               <Routes>
