@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Col, Navbar, Nav, Offcanvas, Modal, Form } from "react-bootstrap";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
+import axiosInstance from "../../lib/axios";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { toast, Slide, Zoom, Flip, Bounce,  } from 'react-toastify';
@@ -48,7 +48,7 @@ const ManageBoard = () => {
   const fetchListData = async () => { 
     try {
       if (!boardId) return;
-      const response = await axios.get(`http://${window.location.hostname}:6080/newlist/showList/${boardId}`);
+      const response = await axiosInstance.get(`/newlist/showList/${boardId}`);
       console.log(response.data.list);
       if (response.data.list) {
         setLists(response.data.list);
@@ -75,7 +75,7 @@ const ManageBoard = () => {
       listColor: bgcolor,
     }
     try {
-      const response = await axios.post(`http://${window.location.hostname}:6080/newList/createList/${boardId}`,
+      const response = await axiosInstance.post(`/newList/createList/${boardId}`,
         listData
     );
       if (response.status === 200) {
@@ -95,7 +95,7 @@ const ManageBoard = () => {
 const deleteList = async(deleteListId )=>{
   console.log(deleteListId)
   try{
-    const response = await axios.delete(`http://${window.location.hostname}:6080/newList/deleteList`, {
+    const response = await axiosInstance.delete(`/newList/deleteList`, {
       data:{
         deleteListId
       }
@@ -120,7 +120,7 @@ e.preventDefault();
     taskName
   }
   try {
-    const response = await axios.post(`http://${window.location.hostname}:6080/newTask/createTask`,
+    const response = await axiosInstance.post(`/newTask/createTask`,
       taskData
   );
     if (response.status === 201) {
@@ -189,7 +189,7 @@ e.preventDefault();
     setLists([...lists]);
   
     try {
-      const response = await axios.post(`http://${window.location.hostname}:6080/newTask/moveTask`, {
+      const response = await axiosInstance.post(`/newTask/moveTask`, {
         taskId: movedTask._id,
         sourceListId: source.droppableId,
         destinationListId: destination.droppableId,
@@ -207,7 +207,7 @@ e.preventDefault();
 
   const deleteTask = async(deleteTaskId, listIdDeleteTask )=>{
     try{
-      const response = await axios.delete(`http://${window.location.hostname}:6080/newTask/deleteTask`, {
+      const response = await axiosInstance.delete(`/newTask/deleteTask`, {
         data:{
           deleteTaskId,
           listIdDeleteTask
@@ -226,7 +226,7 @@ e.preventDefault();
 
   const completeTask = async(completeTaskId, listIdCompleteTask, taskCompleteStatus )=>{
     try{
-      const response = await axios.patch(`http://${window.location.hostname}:6080/newTask/completeTask`, {
+      const response = await axiosInstance.patch(`/newTask/completeTask`, {
           completeTaskId,
           listIdCompleteTask, 
           taskCompleteStatus
