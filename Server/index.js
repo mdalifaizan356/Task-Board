@@ -29,7 +29,9 @@ app.use("/newboard", boardRoute);
 app.use("/newlist", listRoute);
 app.use("/newtask", taskRoute);
 
-
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
+});
 
 mongoose.connect(mongo_url)
 .then(()=>{
