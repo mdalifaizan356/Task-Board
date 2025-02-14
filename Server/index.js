@@ -7,6 +7,8 @@ const listRoute = require("./Routes/listRoute");
 const taskRoute = require("./Routes/taskRoute");
 const fileUpload = require('express-fileupload');
 const cors = require("cors");
+const path = require("path");
+
 
 const app = express();
 
@@ -29,8 +31,14 @@ app.use("/newboard", boardRoute);
 app.use("/newlist", listRoute);
 app.use("/newtask", taskRoute);
 
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
+// app.get("/", (req, res) => {
+//   res.send("Backend is running!");
+// });
+
+app.use(express.static(path.join(__dirname, "../Client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Client/dist", "index.html"));
 });
 
 mongoose.connect(mongo_url)
