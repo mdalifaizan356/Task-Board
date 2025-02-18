@@ -49,7 +49,6 @@ const ManageBoard = () => {
     try {
       if (!boardId) return;
       const response = await axiosInstance.get(`/newlist/showList/${boardId}`);
-      console.log(response.data.list);
       if (response.data.list) {
         setLists(response.data.list);
       } else {
@@ -93,7 +92,6 @@ const ManageBoard = () => {
 
 //Delete List 
 const deleteList = async(deleteListId )=>{
-  console.log(deleteListId)
   try{
     const response = await axiosInstance.delete(`/newList/deleteList`, {
       data:{
@@ -105,8 +103,7 @@ const deleteList = async(deleteListId )=>{
     }
   }
   catch(error){
-    console.error("Error moving task:", error);
-    alert("Failed to move the task.");
+    toast.error("Failed to move the task.", {transition: Bounce});
     fetchListData(); 
   }
 }
@@ -130,7 +127,7 @@ e.preventDefault();
     }
   } catch (error) {
     console.error("Error creating board:", error);
-    alert("Failed to create board. Please try again.");
+    toast.error("Failed to create board. Please try again.", {transition: Bounce});
   }
   
 };
@@ -199,8 +196,7 @@ e.preventDefault();
         await fetchListData();
       }
     } catch (error) {
-      console.error("Error moving task:", error);
-      alert("Failed to move the task.");
+      toast.error("Failed to move the task.", {transition: Bounce});
       fetchListData(); 
     }
   };
@@ -251,7 +247,7 @@ e.preventDefault();
     <Navbar fluid variant="dark" expand={false} className="p-0" style={{ height: "40px", fontSize: "14px", display: "flex", alignItems: "center", justifyContent: "end", backgroundColor: bgcolor, }} >
       <h5>{boardData.boardName}</h5>
       <Button className="navbar-toggler" onClick={handleOffcanvasShow} aria-label="Toggle navigation" style={{ background: "transparent", border: "none", fontSize: "20px", color: "white", marginRight: "10px", display: "flex", alignItems: "center" }}>&#x2022;&#x2022;&#x2022; </Button>
-      <Navbar.Offcanvas id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" placement="end" show={showOffcanvas} onHide={handleOffcanvasClose} style={{ marginTop: "0%", backgroundColor: bgcolor, width:"70%", fontSize: "25px" }} >
+      <Navbar.Offcanvas id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" placement="top" show={showOffcanvas} onHide={handleOffcanvasClose} style={{ marginTop: "20vh", marginBottom: "20vh", backgroundColor: bgcolor, width:"50%", fontSize: "15px" }} >
         <Offcanvas.Header closeButton>
           {/* <Offcanvas.Title id="offcanvasNavbarLabel">Board Menu</Offcanvas.Title> */}
         </Offcanvas.Header>

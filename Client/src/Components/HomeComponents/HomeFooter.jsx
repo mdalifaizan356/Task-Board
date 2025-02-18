@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, Row, Col, Offcanvas, Dropdown, Button, Card } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import heroimg from "../../../public/heroimg.jpeg"
 import HomeHeader from '../../Components/HomeComponents/HomeHeader';
@@ -21,13 +21,16 @@ const HomeFooter = () => {
   }
   return (
     <>
-            <Container fluid className='mt-5' style={{background:"#182c4e", color:"white"}}>
-              <Row>
-                <Col className='d-flex justify-content-center '>
-                  <p style={{fontSize:"15px"}}>Copyright © 2025 DevPasha</p>
-                </Col>
-              </Row>
-            </Container>
+            {/* <Container fluid className='mt-5' style={{background:"#182c4e", color:"white"}}> */}
+
+      <Card style={{background:"#182c4e", color:"white"}}>
+        <Card.Body>
+          <Card.Text>
+          <p style={{fontSize:"15px"}}>Copyright © 2025 DevPasha</p>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+            {/* </Container> */}
     </>
   )
 }

@@ -9,19 +9,19 @@ module.exports = async (req, res, next) => {
             return res.status(401).json({ message: "No token provided" });
         }
 
-        const splitToken = token.split(" ")[1]; // Bearer token
+        const splitToken = token.split(" ")[1];
         const decoded = jwt.verify(splitToken, secretKey);
 
         if (!decoded) {
             return res.status(401).json({ message: "Invalid Token" });
         }
 
-        const user = await userModel.findById(decoded.id).select("-password"); // Exclude password
+        const user = await userModel.findById(decoded.id).select("-password");
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
 
-        req.user = user; // Store user data in request
+        req.user = user;
         next();
     } catch (err) {
         res.status(400).json({ message: "Invalid Token" });

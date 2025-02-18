@@ -17,22 +17,23 @@ const HomeContent = () => {
   }
   
   const buttonStyle={
-    width:"10%"
+    width:"50%"
   }
   return (
     <>
         <Container fluid  style={mainContainerStyle}>
               <Row>
-                <Col className='d-flex flex-column justify-content-center align-items-center pb-5 mb-5' style={{color:"white"}}>
+                <Col className='d-flex flex-column justify-content-center align-items-center pb-2 mb-2 mt-5' style={{color:"white"}}>
                     <h1>TaskBord makes it easier for<br/> teams to manage<br/> projects and tasks.</h1>
                     <div className='d-flex  justify-content-center align-items-center mt-5' >
-                    {/* <input type='text' placeholder='Email' className='m-2 p-2 border-1 rounded'  style={inputStyle}/> */}
                     <Button as={Link} to="/signup" variant="primary" className='m-1 p-2  rounded w-100'>Sign up -it's free! </Button>
                     </div>
                 </Col>
-        
+              </Row>
+              <Row>
                 <Col className='d-flex  justify-content-center align-items-center'>
-                  <img src={heroimg} style={{width:"100%"}}/>
+                 <Button as={Link} to="/signup" variant="primary" className='m-1 p-2  rounded w-100'>Sign up -it's free! </Button>
+                  <img src={heroimg} style={{width:"100%", borderImageWidth:"100%"}}/>
                 </Col>
               </Row>
             </Container>
@@ -41,9 +42,9 @@ const HomeContent = () => {
               <Row>
                 <Col>
                   <div className='d-flex justify-content-center mt-5'>
-                  <h2>Explore Taskboard’s features that help your team succeed</h2>
+                  <h2>Explore Taskboard’s features<br/> that help your team succeed</h2>
                   </div>
-                  <div className='d-flex justify-content-center mt-1'>
+                  <div className='d-flex justify-content-evenly mt-1'>
                     <Button variant="primary" className='m-1 p-2  rounded-pill' style={buttonStyle}>Cards</Button>
                     <Button variant="primary" className='m-1 p-2  rounded-pill ' style={buttonStyle}>Views</Button>
                     <Button variant="primary" className='m-1 p-2  rounded-pill' style={buttonStyle}>Automation</Button>
@@ -77,9 +78,9 @@ const HomeContent = () => {
                   </ul>
                   </div>
                 </Col>
-                <Col className='d-flex justify-content-center'>
-                <img src={heroimg} style={{width:"100%"}}/>
-                </Col>
+                {/* <Col className='d-flex justify-content-center'>
+                <img src={heroimg} style={{width:"20%"}}/>
+                </Col> */}
               </Row>
             </Container>
     </>

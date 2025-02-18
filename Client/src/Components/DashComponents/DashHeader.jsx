@@ -15,10 +15,11 @@ const UserHeader = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  
-    const createdDate = new Date(user.createdAt).toLocaleString();
+  const createdDate = new Date(user.createdAt);
+  const utcCreatedDate = new Date(createdDate.getTime() - createdDate.getTimezoneOffset() * 60000);
+  const formattedDate = utcCreatedDate.toISOString().split("T")[0];
   if (!createdDate) return null; 
-  const freeDaysLeft = calculateFreeDaysLeft(createdDate);
+  const freeDaysLeft = calculateFreeDaysLeft(formattedDate);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -60,7 +61,7 @@ const UserHeader = () => {
               placement="start"
               show={show}
               onHide={handleClose}
-              style={{ marginTop: "0%", width: "70%", fontSize: "20px" }}
+              style={{ marginTop: "0%", width: "100%", fontSize: "20px" }}
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id="offcanvasNavbarLabel">Menu</Offcanvas.Title>
@@ -92,9 +93,6 @@ const UserHeader = () => {
           "Your free trial has ended."
       )}
         </Button>
-            <h4 style={{ color: "crimson", marginLeft: "15px" }}>
-              Welcome {user ? user.Name : "Guest"}
-            </h4>
           </Navbar>
         </Col>
       </Row>

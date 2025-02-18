@@ -6,6 +6,12 @@ import { Button, Form, Modal, Card, Row, Col, Container } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Pagination, Navigation } from "swiper/modules";
+
 const ShowBoard = () => {
   const [showModal, setShowModal] = useState(false);
   const [newBoard, setNewBoard] = useState({ name: "", color: "#E84711" });
@@ -79,21 +85,29 @@ const ShowBoard = () => {
   return (
     <>
       <Container fluid> 
-        <div className="d-flex justify-content-between align-items-center">
-          <h1 className="text-danger">Boards</h1>
+        <div className="d-flex flex-column justify-content-between align-items-center mt-3">
+          <h1 className="text-success">Your Total Boards {boardData.length}</h1>
           <Button onClick={() => setShowModal(true)} variant="primary">
-            Create Board
+            Create New Board
           </Button>
         </div>
       </Container>
-      <Container className="mt-4">
+      <Container className="mt-5">
         {boardData.length === 0 ? (
           <h2 className="text-center text-muted">No Boards Available</h2>
         ) : (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-            {boardData.map((board, index) => (
-              <Col key={board._id}>
-                <Card
+          <Swiper
+      slidesPerView={1}  // Ek time par 3 cards dikhayega
+      spaceBetween={30}  // Cards ke beech gap
+      navigation={false} // Next/Prev buttons enable
+      pagination={{ clickable: true }} // Dots enable
+      modules={[Pagination, Navigation]}
+      className="mySwiper"
+    >
+      {boardData.map((board) => (
+        <SwiperSlide key={board._id} className="p-1 border rounded-lg shadow-md">
+        <Card
                   className="shadow-sm"
                   style={{
                     backgroundColor: board.boardColor || "#FFFFFF",
@@ -101,13 +115,16 @@ const ShowBoard = () => {
                   }}
                   onClick={() => viewHandler(board)}
                 >
-                  <Card.Body>
+                  <Card.Body className="d-flex flex-column justify-content-between align-items-center mt-3">
+                    <Card.Title className="text-dark">{board.boardName}</Card.Title>
+                    <Card.Text className="text-muted">Board ID: {board._id}</Card.Text>
                     <Card.Title className="text-dark">{board.boardName}</Card.Title>
                     <Card.Text className="text-muted">Board ID: {board._id}</Card.Text>
                   </Card.Body>
                 </Card>
-              </Col>
-            ))}
+        </SwiperSlide>
+      ))}
+    </Swiper>
           </Row>
         )}
       </Container>
@@ -151,3 +168,5 @@ const ShowBoard = () => {
 };
 
 export default ShowBoard;
+
+
