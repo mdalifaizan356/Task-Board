@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(
     cors({
-      origin: "https://task-board-smoky.vercel.app/",
+      origin: "https://task-board-smoky.vercel.app",
       methods: "GET,POST,PUT,PATCH,DELETE",
       credentials: true,
     })
