@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-    baseURL:`http://${window.location.hostname}:6080/`,
+    baseURL:`https://task-board-2str.onrender.com`,
     // baseURL:`http://localhost:6080/`,
     // baseURL:`https://task-board-l2qj.onrender.com`,
     withCredentials: true,
