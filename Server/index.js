@@ -31,15 +31,15 @@ app.use("/newboard", boardRoute);
 app.use("/newlist", listRoute);
 app.use("/newtask", taskRoute);
 
-// app.get("/", (req, res) => {
-//   res.send("Backend is running!");
-// });
-
-app.use(express.static(path.join(__dirname, "../Client/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Client/dist", "index.html"));
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
 });
+
+// app.use(express.static(path.join(__dirname, "../Client/dist")));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../Client/dist", "index.html"));
+// });
 
 
 mongoose.connect(mongo_url)
