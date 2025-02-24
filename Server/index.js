@@ -9,47 +9,60 @@ const fileUpload = require('express-fileupload');
 const cors = require("cors");
 const path = require("path");
 
-
 const app = express();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 6080;
 const HOST = '0.0.0.0';
 const mongo_url = process.env.MONGO_URL;
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+// Allowed Origins for Development and Production
+const allowedOrigins = [
+    "http://localhost:5173", // Vite default port for development
+    "https://task-board-smoky.vercel.app" // Production URL
+];
+
+// CORS Configuration
 app.use(
     cors({
-      origin: "https://task-board-smoky.vercel.app",
-      methods: "GET,POST,PUT,PATCH,DELETE",
-      credentials: true,
+        origin: function (origin, callback) {
+            // Agar origin allowedOrigins list me hai ya origin undefined (e.g., Postman)
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        methods: "GET,POST,PUT,PATCH,DELETE",
+        credentials: true,
     })
-  );
+);
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
+
+// Routes
 app.use("/newuser", userRoute);
 app.use("/newboard", boardRoute);
 app.use("/newlist", listRoute);
 app.use("/newtask", taskRoute);
 
+// Test API
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+    res.send("Backend is running!");
 });
 
-// app.use(express.static(path.join(__dirname, "../Client/dist")));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../Client/dist", "index.html"));
-// });
-
-
+// MongoDB Connection
 mongoose.connect(mongo_url)
-.then(()=>{
-    console.log("Connection Successfull with MongoDB");
-})
-.catch((e)=>{
-    console.log("Error with mongoDB connection",e);
-})
+    .then(() => {
+        console.log("Connection Successful with MongoDB");
+    })
+    .catch((e) => {
+        console.log("Error with MongoDB connection", e);
+    });
 
-app.listen(port, HOST,  ()=>{
-    console.log(`Server is runnig on Port Number ${port}`);
-})
+// Server
+app.listen(port, HOST, () => {
+    console.log(`Server is running on Port Number ${port}`);
+});
